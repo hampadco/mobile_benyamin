@@ -1,0 +1,66 @@
+@using Microsoft.AspNetCore.Components
+
+<div class="hotelTab mt-7 rounded-3xl bg-white p-5 dark:bg-n0">
+    <div class="text-center pb-4 border-b border-dashed border-n100 dark:border-n70">
+        <div class="flex items-center justify-center gap-2">
+            <p class="text-xl font-bold text-p1">جستجوی بارها</p>
+            <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="hover" colors="primary:#2563eb" style="width:32px;height:32px"></lord-icon>
+        </div>
+    </div>
+    <div class="pt-4">
+        <div class="animationOne content" id="flight">
+            <div class="flex flex-col gap-4">
+                <div class="w-full">
+                    <a href="select-origin.html" class="block w-full rounded-xl border-x border-b-2 border-t border-n50 bg-white p-3.5 text-n50 dark:border-n400 dark:bg-n0 dark:text-white">
+                        <p class="text-sm text-n400">انتخاب مبدا</p>
+                    </a>
+                </div>
+                <div class="w-full">
+                    <a href="select-destination.html" class="block w-full rounded-xl border-x border-b-2 border-t border-n50 bg-white p-3.5 text-n50 dark:border-n400 dark:bg-n0 dark:text-white">
+                        <p class="text-sm text-n400">انتخاب مقصد</p>
+                    </a>
+                </div>
+                <div class="w-full">
+                    <div class="w-full">
+                        <p class="pb-2 text-sm font-semibold dark:text-white">تاریخ حمل</p>
+                        <div @onclick="OpenDateModal" class="dateModalOpenButton w-full cursor-pointer rounded-xl border-x border-b-2 border-t border-n50 bg-white p-3.5 text-n50 dark:border-n400 dark:bg-n0 dark:text-white">
+                            <p class="text-sm text-n400" id="selected_date">انتخاب تاریخ</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between gap-2">
+                    <div class="w-full">
+                        <p class="pb-2 text-sm font-semibold dark:text-white">نوع خودرو</p>
+                        <a href="select-vehicle.html" class="block w-full cursor-pointer rounded-xl border-x border-b-2 border-t border-n50 bg-white p-3.5 text-n50 dark:border-n400 dark:bg-n0 dark:text-white">
+                            <p class="text-sm text-n400">انتخاب نوع خودرو</p>
+                        </a>
+                    </div>
+                    <div class="w-full">
+                        <p class="pb-2 text-sm font-semibold dark:text-white">نوع بار</p>
+                        <div @onclick="OpenCargoTypeModal" class="cargoTypeModalOpenButton w-full cursor-pointer rounded-xl border-x border-b-2 border-t border-n50 bg-white p-3.5 text-n50 dark:border-n400 dark:bg-n0 dark:text-white">
+                            <p class="text-sm text-n400">انتخاب نوع بار</p>
+                        </div>
+                    </div>
+                </div>
+                <a href="search-flight.html" class="flex items-center justify-center rounded-xl bg-p1 p-3 text-white">
+                    <span>جستجوی بار</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool isDateModalOpen;
+    private bool isCargoTypeModalOpen;
+
+    private void OpenDateModal()
+    {
+        isDateModalOpen = true;
+    }
+
+    private void OpenCargoTypeModal()
+    {
+        isCargoTypeModalOpen = true;
+    }
+} 

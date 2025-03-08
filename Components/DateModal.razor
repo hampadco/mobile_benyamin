@@ -1,0 +1,126 @@
+@using Microsoft.JSInterop
+@inject IJSRuntime JS
+
+<link href="css/dateModal.css" rel="stylesheet" />
+
+@if (IsOpen)
+{
+    <div class="popup-modal active container fixed inset-0 z-30">
+        <div class="modalBg absolute inset-0 bg-black opacity-30 dark:bg-white" @onclick="OnClose"></div>
+        <div class="modal relative z-10 flex h-full flex-col items-center justify-center px-6 text-center">
+            <div class="w-full rounded-2xl bg-b50 p-7 dark:bg-n50">
+                <div class="pb-5">
+                    <p class="text-3xl font-bold dark:text-white">انتخاب تاریخ</p>
+                    <p class="pt-3 text-sm text-n400 dark:text-n500">تاریخ حمل بار خود را انتخاب کنید</p>
+                </div>
+                <div class="date-area flex justify-between border-y border-dashed border-n100 py-5 dark:border-n70">
+                    <div class="flex flex-col items-center justify-center">
+                        <div class="flex items-center justify-center rounded-full bg-white p-2.5 text-xl text-p1 dark:bg-n0">
+                            <i class="ph ph-calendar"></i>
+                        </div>
+                        <p class="pt-2 text-sm font-semibold">سال</p>
+                        <div class="date-slider-container">
+                            <div class="date-slider-highlight"></div>
+                            <div class="swiper year-slider">
+                                <div class="swiper-wrapper">
+                                    @foreach (var year in Years)
+                                    {
+                                        <div class="swiper-slide">@year</div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="h-[200px] w-px border-r border-dashed border-n100 dark:border-n70"></div>
+                    <div class="flex flex-col items-center justify-center">
+                        <div class="flex items-center justify-center rounded-full bg-white p-2.5 text-xl text-p1 dark:bg-n0">
+                            <i class="ph ph-calendar-blank"></i>
+                        </div>
+                        <p class="pt-2 text-sm font-semibold">ماه</p>
+                        <div class="date-slider-container">
+                            <div class="date-slider-highlight"></div>
+                            <div class="swiper month-slider">
+                                <div class="swiper-wrapper">
+                                    @foreach (var month in Months)
+                                    {
+                                        <div class="swiper-slide">@month</div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="h-[200px] w-px border-r border-dashed border-n100 dark:border-n70"></div>
+                    <div class="flex flex-col items-center justify-center">
+                        <div class="flex items-center justify-center rounded-full bg-white p-2.5 text-xl text-p1 dark:bg-n0">
+                            <i class="ph ph-number"></i>
+                        </div>
+                        <p class="pt-2 text-sm font-semibold">روز</p>
+                        <div class="date-slider-container">
+                            <div class="date-slider-highlight"></div>
+                            <div class="swiper day-slider">
+                                <div class="swiper-wrapper">
+                                    @foreach (var day in Days)
+                                    {
+                                        <div class="swiper-slide">@day</div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-2 pt-6">
+                    <button @onclick="OnClose" class="block w-full rounded-lg border border-p1 py-3 text-center font-semibold dark:text-white">لغو</button>
+                    <button @onclick="OnConfirm" class="block w-full rounded-lg bg-p1 py-3 text-center font-semibold text-white">تایید</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsOpenChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnDateSelected { get; set; }
+
+    private List<string> Years = new() { "1402", "1403", "1404", "1405", "1406" };
+    private List<string> Months = new() { "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند" };
+    private List<string> Days = Enumerable.Range(1, 31).Select(d => d.ToString()).ToList();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (IsOpen) // Initialize whenever modal is opened
+        {
+            await Task.Delay(100); // Give time for DOM to render
+            await JS.InvokeVoidAsync("initializeDateSwipers");
+        }
+    }
+
+    private async Task OnClose()
+    {
+        await IsOpenChanged.InvokeAsync(false);
+    }
+
+    private async Task OnConfirm()
+    {
+        var year = await JS.InvokeAsync<string>("getActiveSwiperSlideContent", "year-slider");
+        var month = await JS.InvokeAsync<string>("getActiveSwiperSlideContent", "month-slider");
+        var day = await JS.InvokeAsync<string>("getActiveSwiperSlideContent", "day-slider");
+
+        string selectedDate = $"{year}/{month}/{day}";
+        await OnDateSelected.InvokeAsync(selectedDate);
+        await OnClose();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (IsOpen)
+        {
+            StateHasChanged();
+        }
+    }
+} 

@@ -1,0 +1,173 @@
+<div class="homeTab">
+    <div class="tab-button flex items-center justify-between gap-2 pt-10">
+        @foreach (var tab in _tabs)
+        {
+            <div class="home-tab-item relative w-full cursor-pointer rounded-3xl bg-white p-1 dark:bg-n0" @onclick="() => SelectTab(tab.Id)">
+                <div class="absolute bottom-0 left-0 right-0 flex items-center justify-center">
+                    <div class="activeBar h-0.5 w-16 rounded-t-full @(ActiveTab == tab.Id ? "bg-p1" : "bg-b50 dark:bg-n50")"></div>
+                </div>
+                <div class="b flex w-full items-center justify-center rounded-3xl bg-b50 py-4 dark:bg-n50">
+                    <div class="service-icon">
+                        <lord-icon
+                            src="@tab.IconUrl"
+                            trigger="hover"
+                            colors="primary:#2563eb"
+                            state="hover"
+                            style="width:100%;height:100%">
+                        </lord-icon>
+                    </div>
+                </div>
+                <div class="p-3 text-center">
+                    <p class="tab-item-text text-lg font-bold dark:text-white">@tab.Title</p>
+                    <p class="text-sm text-n400 dark:text-n500">@tab.Subtitle</p>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (ActiveTab == "reserve")
+    {
+        <div class="hotelTab mt-7 rounded-3xl bg-white p-5 dark:bg-n0">
+            <div class="text-center pb-4 border-b border-dashed border-n100 dark:border-n70">
+                <div class="flex items-center justify-center gap-2">
+                    <p class="text-xl font-bold text-p1">جستجوی بارها</p>
+                    <lord-icon
+                        src="https://cdn.lordicon.com/msoeawqm.json"
+                        trigger="hover"
+                        colors="primary:#2563eb"
+                        style="width:32px;height:32px">
+                    </lord-icon>
+                </div>
+            </div>
+            <div class="pt-4">
+                <div class="animationOne content" id="flight">
+                    <div class="flex flex-col gap-4">
+                        <div class="w-full">
+                            <a href="select-origin.html" class="block w-full rounded-xl border-x border-b-2 border-t border-n50 bg-white p-3.5 text-n50 dark:border-n400 dark:bg-n0 dark:text-white">
+                                <p class="text-sm text-n400">انتخاب مبدا</p>
+                            </a>
+                        </div>
+                        <div class="w-full">
+                            <a href="select-destination.html" class="block w-full rounded-xl border-x border-b-2 border-t border-n50 bg-white p-3.5 text-n50 dark:border-n400 dark:bg-n0 dark:text-white">
+                                <p class="text-sm text-n400">انتخاب مقصد</p>
+                            </a>
+                        </div>
+                        <div class="w-full">
+                            <div class="w-full">
+                                <p class="pb-2 text-sm font-semibold dark:text-white">تاریخ حمل</p>
+                                <div @onclick="OpenDateModal" class="w-full cursor-pointer rounded-xl border-x border-b-2 border-t border-n50 bg-white p-3.5 text-n50 dark:border-n400 dark:bg-n0 dark:text-white">
+                                    <p class="text-sm text-n400">@SelectedDate</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="w-full">
+                                <p class="pb-2 text-sm font-semibold dark:text-white">نوع خودرو</p>
+                                <div @onclick="OpenVehicleModal" class="block w-full cursor-pointer rounded-xl border-x border-b-2 border-t border-n50 bg-white p-3.5 text-n50 dark:border-n400 dark:bg-n0 dark:text-white">
+                                    <p class="text-sm text-n400">@SelectedVehicle</p>
+                                </div>
+                            </div>
+                            <div class="w-full">
+                                <p class="pb-2 text-sm font-semibold dark:text-white">نوع بار</p>
+                                <div @onclick="OpenCargoTypeModal" class="w-full cursor-pointer rounded-xl border-x border-b-2 border-t border-n50 bg-white p-3.5 text-n50 dark:border-n400 dark:bg-n0 dark:text-white">
+                                    <p class="text-sm text-n400">@SelectedCargoType</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button @onclick="SearchCargo" class="flex items-center justify-center rounded-xl bg-p1 p-3 text-white">
+                            <span>جستجوی بار</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<DateModal @bind-IsOpen="isDateModalOpen" OnDateSelected="HandleDateSelected" />
+<VehicleModal @bind-IsOpen="isVehicleModalOpen" OnVehicleSelected="HandleVehicleSelected" />
+<CargoTypeModal @bind-IsOpen="isCargoTypeModalOpen" OnCargoTypeSelected="HandleCargoTypeSelected" />
+
+@code {
+    private string ActiveTab = "reserve";
+    private string SelectedDate = "انتخاب تاریخ";
+    private string SelectedVehicle = "انتخاب نوع خودرو";
+    private string SelectedCargoType = "انتخاب نوع بار";
+
+    private bool isDateModalOpen;
+    private bool isVehicleModalOpen;
+    private bool isCargoTypeModalOpen;
+
+    private List<TabItem> _tabs = new()
+    {
+        new TabItem 
+        { 
+            Id = "new-cargo",
+            Title = "ثبت بار جدید",
+            Subtitle = "ارسال بار",
+            IconUrl = "https://cdn.lordicon.com/udwhdpod.json"
+        },
+        new TabItem 
+        { 
+            Id = "reserve",
+            Title = "رزرو بار",
+            Subtitle = "رزرو آنلاین",
+            IconUrl = "https://cdn.lordicon.com/qhviklyi.json"
+        },
+        new TabItem 
+        { 
+            Id = "waybill",
+            Title = "ثبت بارنامه",
+            Subtitle = "مدیریت اسناد",
+            IconUrl = "https://cdn.lordicon.com/puvaffet.json"
+        }
+    };
+
+    private void SelectTab(string tabId)
+    {
+        ActiveTab = tabId;
+    }
+
+    private void OpenDateModal()
+    {
+        isDateModalOpen = true;
+    }
+
+    private void OpenVehicleModal()
+    {
+        isVehicleModalOpen = true;
+    }
+
+    private void OpenCargoTypeModal()
+    {
+        isCargoTypeModalOpen = true;
+    }
+
+    private void HandleDateSelected(string date)
+    {
+        SelectedDate = date;
+    }
+
+    private void HandleVehicleSelected(string vehicle)
+    {
+        SelectedVehicle = vehicle;
+    }
+
+    private void HandleCargoTypeSelected(string cargoType)
+    {
+        SelectedCargoType = cargoType;
+    }
+
+    private void SearchCargo()
+    {
+        // Implement search logic
+    }
+
+    private class TabItem
+    {
+        public string Id { get; set; }
+        public string Title { get; set; }
+        public string Subtitle { get; set; }
+        public string IconUrl { get; set; }
+    }
+} 

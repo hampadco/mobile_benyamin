@@ -1,0 +1,22 @@
+{
+  "name": "ایربوک - سامانه حمل و نقل بار و لجستیک",
+  "short_name": "ایربوک",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "assets/images/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/images/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "description": "اپلیکیشن رزرو آنلاین پرواز و هتل"
+}
