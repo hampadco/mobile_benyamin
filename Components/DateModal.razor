@@ -111,7 +111,7 @@
         var month = await JS.InvokeAsync<string>("getActiveSwiperSlideContent", "month-slider");
         var day = await JS.InvokeAsync<string>("getActiveSwiperSlideContent", "day-slider");
 
-        string selectedDate = $"{year}/{month}/{day}";
+        string selectedDate = $"{day} - {month} - {year}";
         await OnDateSelected.InvokeAsync(selectedDate);
         await OnClose();
     }
