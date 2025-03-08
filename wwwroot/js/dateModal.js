@@ -52,4 +52,8 @@ window.getActiveSwiperSlideContent = function (sliderName) {
         return slider.slides[slider.activeIndex].textContent.trim();
     }
     return '';
+};
+
+window.setBodyOverflow = function (value) {
+    document.body.style.overflow = value;
 }; 
