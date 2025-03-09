@@ -2,6 +2,28 @@
 @inject IJSRuntime JS
 @inject IDialogService DialogService
 
+<style>
+    .date-scroll-container {
+        height: 120px;
+        overflow-y: auto;
+        scroll-snap-type: y mandatory;
+    }
+
+    .date-scroll-item {
+        height: 40px;
+        scroll-snap-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .date-scroll-item.selected {
+        background-color: var(--mud-palette-primary);
+        color: var(--mud-palette-primary-text);
+        font-weight: bold;
+    }
+</style>
+
 <MudDialog @bind-IsVisible="IsOpen" Options="dialogOptions">
     <TitleContent>
         <MudText Typo="Typo.h5" Class="text-center">انتخاب تاریخ</MudText>
@@ -13,36 +35,51 @@
                 <MudPaper Class="d-flex flex-column align-center pa-4">
                     <MudIcon Icon="@Icons.Material.Filled.CalendarToday" Color="Color.Primary" Size="Size.Large" />
                     <MudText Class="mt-2">سال</MudText>
-                    <MudSelect T="string" @bind-Value="selectedYear" Class="mt-2">
+                    <div class="date-scroll-container">
+                        <div style="height: 40px"></div> @* Spacer for top *@
                         @foreach (var year in Years)
                         {
-                            <MudSelectItem Value="@year">@year</MudSelectItem>
+                            <div class="date-scroll-item @(selectedYear == year ? "selected" : "")"
+                                 @onclick="@(() => selectedYear = year)">
+                                @year
+                            </div>
                         }
-                    </MudSelect>
+                        <div style="height: 40px"></div> @* Spacer for bottom *@
+                    </div>
                 </MudPaper>
             </MudItem>
             <MudItem xs="4">
                 <MudPaper Class="d-flex flex-column align-center pa-4">
                     <MudIcon Icon="@Icons.Material.Filled.DateRange" Color="Color.Primary" Size="Size.Large" />
                     <MudText Class="mt-2">ماه</MudText>
-                    <MudSelect T="string" @bind-Value="selectedMonth" Class="mt-2" Style="min-width: 100px;">
+                    <div class="date-scroll-container">
+                        <div style="height: 40px"></div> @* Spacer for top *@
                         @foreach (var month in Months)
                         {
-                            <MudSelectItem Value="@month.FullName">@month.ShortName</MudSelectItem>
+                            <div class="date-scroll-item @(selectedMonth == month.FullName ? "selected" : "")"
+                                 @onclick="@(() => selectedMonth = month.FullName)">
+                                @month.FullName
+                            </div>
                         }
-                    </MudSelect>
+                        <div style="height: 40px"></div> @* Spacer for bottom *@
+                    </div>
                 </MudPaper>
             </MudItem>
             <MudItem xs="4">
                 <MudPaper Class="d-flex flex-column align-center pa-4">
                     <MudIcon Icon="@Icons.Material.Filled.Numbers" Color="Color.Primary" Size="Size.Large" />
                     <MudText Class="mt-2">روز</MudText>
-                    <MudSelect T="string" @bind-Value="selectedDay" Class="mt-2">
+                    <div class="date-scroll-container">
+                        <div style="height: 40px"></div> @* Spacer for top *@
                         @foreach (var day in Days)
                         {
-                            <MudSelectItem Value="@day">@day</MudSelectItem>
+                            <div class="date-scroll-item @(selectedDay == day ? "selected" : "")"
+                                 @onclick="@(() => selectedDay = day)">
+                                @day
+                            </div>
                         }
-                    </MudSelect>
+                        <div style="height: 40px"></div> @* Spacer for bottom *@
+                    </div>
                 </MudPaper>
             </MudItem>
         </MudGrid>
