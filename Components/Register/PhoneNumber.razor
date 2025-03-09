@@ -14,18 +14,22 @@
             </div>
         </div>
         <div class="phone-card-wrapper">
+
+                               
             <div class="phone-card">
+ <p style="font-size: 1.2rem; font-weight: 600; margin-bottom: 1rem; color: #333; text-align: center;padding-bottom: 1rem;">شماره تلفن خود را وارد کنید </p>
+
                 <div class="input-group">
                     <input type="tel" 
                            class="form-control @(IsValid ? "" : "is-invalid")"
                            value="@Value"
                            @oninput="OnPhoneNumberChanged"
                            maxlength="11"
-                           placeholder="شماره موبایل خود را وارد کنید..." />
+                           placeholder="شماره موبایل ..." />
                     @if (!IsValid)
                     {
                         <div class="invalid-feedback">
-                            لطفا یک شماره موبایل معتبر وارد کنید (مثال: 09123456789)
+                            (مثال: 09123456789)
                         </div>
                     }
                 </div>
@@ -322,7 +326,17 @@ else
             numbersOnly = numbersOnly[..11];
         }
         
+        Value = numbersOnly;
         await ValueChanged.InvokeAsync(numbersOnly);
+
+        // اگر شماره تلفن معتبر است، به طور خودکار به مرحله تایید OTP برو
+        if (numbersOnly.Length == 11 && Regex.IsMatch(numbersOnly, @"^09\d{9}$"))
+        {
+            await Task.Delay(500); // تاخیر کوتاه برای تجربه کاربری بهتر
+            await OnVerificationRequested.InvokeAsync(Value);
+            showOtpVerification = true;
+            StateHasChanged();
+        }
     }
 
     private async Task HandleOtpVerified(string otp)
