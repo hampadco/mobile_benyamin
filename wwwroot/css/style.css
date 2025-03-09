@@ -645,8 +645,11 @@ body.dark .check-circle{
   top: -1rem;
 }
 .-top-8{
-  top: -2rem;
+  top: -1.8rem;
+  text-align: center;
+  margin-right: 88px;
 }
+
 .bottom-0{
   bottom: 0px;
 }
