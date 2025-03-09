@@ -94,6 +94,44 @@
             </MudStack>
         </MudPaper>
     }
+    else if (ActiveTab == "new-cargo")
+    {
+        <MudPaper Elevation="0" Class="hotelTab mt-7 rounded-3xl p-5">
+            <MudStack Spacing="4">
+                <MudStack AlignItems="AlignItems.Center" Class="pb-4 border-b border-dashed border-n100 dark:border-n70">
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                        <MudText Typo="Typo.h5" Color="Color.Primary">ثبت بار جدید</MudText>
+                        <MudImage Src="assets/images/sadi/1.png" Alt="ثبت بار" Width="32" Height="32" ObjectFit="ObjectFit.Contain" />
+                    </MudStack>
+                </MudStack>
+
+                <MudStack Class="pt-4" Spacing="4">
+                    <div class="animationOne content">
+                        <MudImage Src="assets/images/sadi/1.png" Alt="ثبت بار" Class="w-full rounded-xl" ObjectFit="ObjectFit.Cover" Height="300" />
+                    </div>
+                </MudStack>
+            </MudStack>
+        </MudPaper>
+    }
+    else if (ActiveTab == "waybill")
+    {
+        <MudPaper Elevation="0" Class="hotelTab mt-7 rounded-3xl p-5">
+            <MudStack Spacing="4">
+                <MudStack AlignItems="AlignItems.Center" Class="pb-4 border-b border-dashed border-n100 dark:border-n70">
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                        <MudText Typo="Typo.h5" Color="Color.Primary">بارنامه</MudText>
+                        <MudImage Src="assets/images/sadi/2.png" Alt="بارنامه" Width="32" Height="32" ObjectFit="ObjectFit.Contain" />
+                    </MudStack>
+                </MudStack>
+
+                <MudStack Class="pt-4" Spacing="4">
+                    <div class="animationOne content">
+                        <MudImage Src="assets/images/sadi/2.png" Alt="بارنامه" Class="w-full rounded-xl" ObjectFit="ObjectFit.Cover" Height="300" />
+                    </div>
+                </MudStack>
+            </MudStack>
+        </MudPaper>
+    }
 </MudContainer>
 
 <DateModal @bind-IsOpen="isDateModalOpen" OnDateSelected="HandleDateSelected" />
