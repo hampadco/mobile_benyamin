@@ -1,54 +1,66 @@
 @using Microsoft.AspNetCore.Components
+@using MudBlazor
 
-<div class="hotelTab mt-7 rounded-3xl bg-white p-5 dark:bg-n0">
-    <div class="text-center pb-4 border-b border-dashed border-n100 dark:border-n70">
-        <div class="flex items-center justify-center gap-2">
-            <p class="text-xl font-bold text-p1">جستجوی بارها</p>
-            <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="hover" colors="primary:#2563eb" style="width:32px;height:32px"></lord-icon>
-        </div>
-    </div>
-    <div class="pt-4">
-        <div class="animationOne content" id="flight">
-            <div class="flex flex-col gap-4">
-                <div class="w-full">
-                    <a href="/" class="block w-full rounded-xl border-x border-b-2 border-t border-n50 bg-white p-3.5 text-n50 dark:border-n400 dark:bg-n0 dark:text-white">
-                        <p class="text-sm text-n400">انتخاب مبدا</p>
-                    </a>
-                </div>
-                <div class="w-full">
-                    <a href="/" class="block w-full rounded-xl border-x border-b-2 border-t border-n50 bg-white p-3.5 text-n50 dark:border-n400 dark:bg-n0 dark:text-white">
-                        <p class="text-sm text-n400">انتخاب مقصد</p>
-                    </a>
-                </div>
-                <div class="w-full">
-                    <div class="w-full">
-                        <p class="pb-2 text-sm font-semibold dark:text-white">تاریخ حمل</p>
-                        <div @onclick="OpenDateModal" class="dateModalOpenButton w-full cursor-pointer rounded-xl border-x border-b-2 border-t border-n50 bg-white p-3.5 text-n50 dark:border-n400 dark:bg-n0 dark:text-white">
-                            <p class="text-sm text-n400" id="selected_date">انتخاب تاریخ</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex items-center justify-between gap-2">
-                    <div class="w-full">
-                        <p class="pb-2 text-sm font-semibold dark:text-white">نوع خودرو</p>
-                        <a href="/" class="block w-full cursor-pointer rounded-xl border-x border-b-2 border-t border-n50 bg-white p-3.5 text-n50 dark:border-n400 dark:bg-n0 dark:text-white">
-                            <p class="text-sm text-n400">انتخاب نوع خودرو</p>
-                        </a>
-                    </div>
-                    <div class="w-full">
-                        <p class="pb-2 text-sm font-semibold dark:text-white">نوع بار</p>
-                        <div @onclick="OpenCargoTypeModal" class="cargoTypeModalOpenButton w-full cursor-pointer rounded-xl border-x border-b-2 border-t border-n50 bg-white p-3.5 text-n50 dark:border-n400 dark:bg-n0 dark:text-white">
-                            <p class="text-sm text-n400">انتخاب نوع بار</p>
-                        </div>
-                    </div>
-                </div>
-                <a href="/" class="flex items-center justify-center rounded-xl bg-p1 p-3 text-white">
-                    <span>جستجوی بار</span>
-                </a>
+<MudPaper Elevation="0" Class="hotelTab mt-7 rounded-3xl p-5 gap-0">
+    <MudStack Spacing="0">
+        <MudStack AlignItems="AlignItems.Center" Spacing="0" Class="border-b border-dashed border-n100 dark:border-n70">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                <MudText Typo="Typo.body1" Color="Color.Primary" Class="font-bold">جستجوی بارها</MudText>
+                <lord-icon
+                    src="https://cdn.lordicon.com/msoeawqm.json"
+                    trigger="hover"
+                    colors="primary:#2563eb"
+                    style="width:28px;height:28px">
+                </lord-icon>
+            </MudStack>
+        </MudStack>
+
+        <MudStack Spacing="0" Class="mt-0">
+            <div class="animationOne content" id="flight">
+                <MudStack Spacing="0">
+                    <MudPaper Elevation="0" Class="w-full mb-0">
+                        <MudButton Variant="Variant.Outlined" FullWidth="true" Class="rounded-xl p-3.5">
+                            <MudText Class="text-n400">انتخاب مبدا</MudText>
+                        </MudButton>
+                    </MudPaper>
+
+                    <MudPaper Elevation="0" Class="w-full mb-0">
+                        <MudButton Variant="Variant.Outlined" FullWidth="true" Class="rounded-xl p-3.5">
+                            <MudText Class="text-n400">انتخاب مقصد</MudText>
+                        </MudButton>
+                    </MudPaper>
+
+                    <MudPaper Elevation="0" Class="w-full mb-0">
+                        <MudText Class="pb-2" Typo="Typo.subtitle2">تاریخ حمل</MudText>
+                        <MudButton Variant="Variant.Outlined" FullWidth="true" OnClick="OpenDateModal" Class="rounded-xl p-3.5">
+                            <MudText Class="text-n400">انتخاب تاریخ</MudText>
+                        </MudButton>
+                    </MudPaper>
+
+                    <MudGrid Spacing="2">
+                        <MudItem xs="6">
+                            <MudText Class="pb-2" Typo="Typo.subtitle2">نوع خودرو</MudText>
+                            <MudButton Variant="Variant.Outlined" FullWidth="true" Class="rounded-xl p-3.5">
+                                <MudText Class="text-n400">نوع خودرو</MudText>
+                            </MudButton>
+                        </MudItem>
+
+                        <MudItem xs="6">
+                            <MudText Class="pb-2" Typo="Typo.subtitle2">نوع بار</MudText>
+                            <MudButton Variant="Variant.Outlined" FullWidth="true" OnClick="OpenCargoTypeModal" Class="rounded-xl p-3.5">
+                                <MudText Class="text-n400">انتخاب نوع بار</MudText>
+                            </MudButton>
+                        </MudItem>
+                    </MudGrid>
+
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Class="rounded-xl p-3">
+                        جستجوی بار
+                    </MudButton>
+                </MudStack>
             </div>
-        </div>
-    </div>
-</div>
+        </MudStack>
+    </MudStack>
+</MudPaper>
 
 @code {
     private bool isDateModalOpen;

@@ -1,30 +1,32 @@
 @using MudBlazor
 
-<MudContainer Class="homeTab">
-    <MudGrid Class="tab-button pt-10" Spacing="2" Justify="Justify.SpaceBetween">
+<MudContainer MaxWidth="MaxWidth.False" Class="homeTab pa-0 mx-0">
+    <MudGrid Class="tab-button " Spacing="0" Justify="Justify.SpaceBetween">
         @foreach (var tab in _tabs)
         {
-            <MudItem xs="12" sm="4" Style="min-width: 0;">
-                <MudPaper Elevation="0" Class="home-tab-item relative cursor-pointer rounded-3xl p-1 h-100" @onclick="() => SelectTab(tab.Id)">
-                    <div class="absolute bottom-0 left-0 right-0 flex items-center justify-center">
-                        <div class="activeBar h-0.5 w-16 rounded-t-full @(ActiveTab == tab.Id ? "bg-p1" : "bg-b50 dark:bg-n50")"></div>
-                    </div>
-                    <MudPaper Elevation="0" Class="b flex w-full items-center justify-center rounded-3xl bg-b50 py-4 dark:bg-n50">
-                        <div class="service-icon" style="width: 48px; height: 48px;">
-                            <lord-icon
-                                src="@tab.IconUrl"
-                                trigger="hover"
-                                colors="primary:#2563eb"
-                                state="hover"
-                                style="width:100%;height:100%">
-                            </lord-icon>
+            <MudItem xs="4">
+                <div class="px-1">
+                    <MudPaper Elevation="0" Style="height: 180px;" Class="home-tab-item relative cursor-pointer rounded-3xl p-1" @onclick="() => SelectTab(tab.Id)">
+                        <div class="absolute bottom-0 left-0 right-0 flex items-center justify-center">
+                            <div class="activeBar h-0.5 w-12 rounded-t-full @(ActiveTab == tab.Id ? "bg-p1" : "bg-b50 dark:bg-n50")"></div>
+                        </div>
+                        <MudPaper Elevation="0" Class="b flex w-full items-center justify-center rounded-3xl bg-b50 py-3 dark:bg-n50">
+                            <div class="service-icon" style="width: 84px; height: 84px;">
+                                <lord-icon
+                                    src="@tab.IconUrl"
+                                    trigger="hover"
+                                    colors="primary:#2563eb"
+                                    state="hover"
+                                    style="width:100%;height:100%">
+                                </lord-icon>
+                            </div>
+                        </MudPaper>
+                        <div class="text-center px-1 py-1">
+                            <MudText Typo="Typo.body2" Align="Align.Center" Class="font-bold dark:text-white text-truncate">@tab.Title</MudText>
+                            <MudText Typo="Typo.caption" Align="Align.Center" Class="text-n400 dark:text-n500 text-truncate">@tab.Subtitle</MudText>
                         </div>
                     </MudPaper>
-                    <MudText Align="Align.Center" Class="p-3">
-                        <MudText Typo="Typo.h6" Class="tab-item-text font-bold dark:text-white">@tab.Title</MudText>
-                        <MudText Typo="Typo.body2" Class="text-n400 dark:text-n500">@tab.Subtitle</MudText>
-                    </MudText>
-                </MudPaper>
+                </div>
             </MudItem>
         }
     </MudGrid>

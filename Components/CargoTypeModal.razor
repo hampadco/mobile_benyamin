@@ -1,44 +1,42 @@
-@if (IsOpen)
-{
-    <div class="popup-modal container fixed inset-0 z-30">
-        <div class="modalBg absolute inset-0 bg-black opacity-30 dark:bg-white" @onclick="OnClose"></div>
-        <div class="modal relative z-10 flex h-full flex-col items-center justify-center px-6">
-            <div class="w-full rounded-2xl bg-b50 p-7 dark:bg-n50">
-                <div class="modal-title">
-                    <p class="text-3xl font-bold dark:text-white">نوع بار</p>
-                    <p class="modal-subtitle pt-3">نوع بار خود را انتخاب کنید</p>
-                </div>
-                <div class="flex flex-col gap-4 border-y border-dashed border-n100 py-5 dark:border-n70">
-                    @foreach (var cargo in CargoTypes)
-                    {
-                        <label class="cursor-pointer">
-                            <div class="option-group flex items-center justify-between">
-                                <div class="flex items-center justify-start gap-3">
-                                    <div class="flex items-center justify-center rounded-full bg-white p-2.5 text-xl text-p1 dark:bg-n0">
-                                        <i class="@cargo.Icon"></i>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-sm font-semibold dark:text-white">@cargo.Name</p>
-                                        <p class="option-description">@cargo.Description</p>
-                                    </div>
+@using MudBlazor
+
+<MudDialog @bind-IsVisible="IsOpen" Options="dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h4" Class="font-bold dark:text-white">نوع بار</MudText>
+        <MudText Typo="Typo.subtitle1" Class="pt-3 text-n400">نوع بار خود را انتخاب کنید</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudStack Spacing="4" Class="border-y border-dashed border-n100 py-5 dark:border-n70">
+            @foreach (var cargo in CargoTypes)
+            {
+                <MudPaper Elevation="0" Class="cursor-pointer" @onclick="() => SelectCargo(cargo.Name)">
+                    <MudGrid Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                        <MudItem>
+                            <MudStack Row="true" Spacing="3">
+                                <MudPaper Elevation="0" Class="rounded-full bg-white p-2.5 dark:bg-n0">
+                                    <MudIcon Icon="@cargo.Icon" Color="Color.Primary" Size="Size.Large" />
+                                </MudPaper>
+                                <div class="text-right">
+                                    <MudText Typo="Typo.subtitle2" Class="font-semibold dark:text-white">@cargo.Name</MudText>
+                                    <MudText Typo="Typo.body2" Class="text-n400">@cargo.Description</MudText>
                                 </div>
-                                <div class="flex size-6 items-center justify-center rounded-full border border-n100 dark:border-n70">
-                                    <input type="radio" name="cargoType" value="@cargo.Id" 
-                                           @onchange="() => SelectCargo(cargo.Name)"
-                                           class="size-3">
-                                </div>
-                            </div>
-                        </label>
-                    }
-                </div>
-                <div class="flex items-center justify-between gap-4 pt-5">
-                    <button @onclick="OnClose" class="w-full rounded-xl border border-n100 bg-white py-3 text-sm font-semibold text-n400 dark:border-n70 dark:bg-n0 dark:text-n500">لغو</button>
-                    <button @onclick="OnConfirm" class="w-full rounded-xl bg-p1 py-3 text-sm font-semibold text-white">تایید</button>
-                </div>
-            </div>
-        </div>
-    </div>
-}
+                            </MudStack>
+                        </MudItem>
+                        <MudItem>
+                            <MudRadioGroup @bind-SelectedOption="selectedCargo">
+                                <MudRadio Option="@cargo.Name" Color="Color.Primary" />
+                            </MudRadioGroup>
+                        </MudItem>
+                    </MudGrid>
+                </MudPaper>
+            }
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <MudButton FullWidth="true" Variant="Variant.Outlined" OnClick="OnClose" Class="rounded-xl">لغو</MudButton>
+        <MudButton FullWidth="true" Variant="Variant.Filled" Color="Color.Primary" OnClick="OnConfirm" Class="rounded-xl">تایید</MudButton>
+    </DialogActions>
+</MudDialog>
 
 @code {
     [Parameter]
@@ -52,6 +50,15 @@
 
     private string selectedCargo;
 
+    private DialogOptions dialogOptions = new()
+    {
+        FullWidth = true,
+        CloseButton = false,
+        DisableBackdropClick = true,
+        NoHeader = false,
+        ClassBackground = "bg-b50 dark:bg-n50"
+    };
+
     private class CargoType
     {
         public string Id { get; set; }
@@ -62,11 +69,11 @@
 
     private List<CargoType> CargoTypes = new()
     {
-        new() { Id = "general", Name = "بار عمومی", Description = "کالاهای معمولی و عمومی", Icon = "ph ph-package" },
-        new() { Id = "perishable", Name = "بار فاسدشدنی", Description = "مواد غذایی و فاسدشدنی", Icon = "ph ph-snowflake" },
-        new() { Id = "dangerous", Name = "بار خطرناک", Description = "مواد شیمیایی و خطرناک", Icon = "ph ph-warning" },
-        new() { Id = "heavy", Name = "بار سنگین", Description = "تجهیزات و ماشین‌آلات سنگین", Icon = "ph ph-truck" },
-        new() { Id = "fragile", Name = "بار شکستنی", Description = "کالاهای شکستنی و حساس", Icon = "ph ph-package-fragile" }
+        new() { Id = "general", Name = "بار عمومی", Description = "کالاهای معمولی و عمومی", Icon = "fas fa-box" },
+        new() { Id = "perishable", Name = "بار فاسدشدنی", Description = "مواد غذایی و فاسدشدنی", Icon = "fas fa-snowflake" },
+        new() { Id = "dangerous", Name = "بار خطرناک", Description = "مواد شیمیایی و خطرناک", Icon = "fas fa-exclamation-triangle" },
+        new() { Id = "heavy", Name = "بار سنگین", Description = "تجهیزات و ماشین‌آلات سنگین", Icon = "fas fa-truck" },
+        new() { Id = "fragile", Name = "بار شکستنی", Description = "کالاهای شکستنی و حساس", Icon = "fas fa-wine-glass" }
     };
 
     private void SelectCargo(string cargo)
