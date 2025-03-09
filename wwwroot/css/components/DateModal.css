@@ -1,0 +1,52 @@
+/* DateModal Component Styles */
+.date-scroll-container {
+    height: 120px;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+}
+
+.date-scroll-item {
+    height: 40px;
+    scroll-snap-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.date-scroll-item.selected {
+    background-color: var(--mud-palette-primary);
+    color: var(--mud-palette-primary-text);
+    font-weight: bold;
+}
+
+/* Additional DateModal specific styles from style.css */
+.modalOpen {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+}
+
+.modalClose {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0);
+}
+
+.popup-modal {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.popup-modal .modal {
+    transform: scale(0);
+    transition: transform 0.3s ease;
+}
+
+.popup-modal.active {
+    visibility: visible;
+    opacity: 1;
+}
+
+.popup-modal.active .modal {
+    transform: scale(1);
+} 

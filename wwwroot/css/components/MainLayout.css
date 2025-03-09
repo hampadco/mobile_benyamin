@@ -1,0 +1,29 @@
+/* MainLayout Component Styles */
+.main-container {
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background-color: var(--mud-palette-background-grey);
+    padding-bottom: 7rem;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.dark .main-container {
+    background-color: var(--mud-palette-background-dark);
+}
+
+.background-shape {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    width: 100%;
+    z-index: 0;
+}
+
+.content-wrapper {
+    position: relative;
+    z-index: 1;
+    padding: 0 1rem;
+} 

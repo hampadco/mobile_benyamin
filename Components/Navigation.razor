@@ -1,25 +1,27 @@
 @using MudBlazor
 
-<div class="fixed bottom-0 left-0 right-0 z-10">
-    <div class="container pt-8" style="overflow: visible;">
-        <div class="relative flex items-center justify-around bg-p1 pb-4 pt-6 text-white">
+<link href="css/components/Navigation.css" rel="stylesheet" />
+
+<div class="navigation-container">
+    <div class="navigation-wrapper">
+        <div class="navigation-inner">
             <MudLink Href="/">
-                <div class="absolute -top-12 flex flex-col items-center justify-center" style="right: 50%; transform: translateX(50%);">
-                    <MudImage Src="assets/images/menu-bg.png" Alt="" Style="z-index: -1; width: 170px; margin-top: 15px;" />
-                    <div class="absolute -top-[70px] flex size-[42px] items-center justify-center rounded-full bg-white text-p1" style="left: 50%; transform: translateX(-50%);margin-top: -25px;">
+                <div class="navigation-menu-bg">
+                    <MudImage Src="assets/images/menu-bg.png" Alt="" Class="navigation-menu-bg-image" />
+                    <div class="navigation-menu-icon">
                         <MudIcon Icon="@Icons.Material.Filled.Chat" Size="Size.Medium" Class="!text-lg" />
                     </div>
                 </div>
-                <div class="flex flex-col items-center justify-center gap-1">
+                <div class="navigation-link">
                     <MudIcon Icon="@Icons.Material.Filled.Home" Size="Size.Medium" Class="text-white" />
-                    <span class="block size-1 rounded-full bg-white"></span>
+                    <span class="navigation-dot"></span>
                 </div>
             </MudLink>
             <MudLink Href="/" Class="text-2xl">
                 <MudIcon Icon="@Icons.Material.Filled.Bookmark" Size="Size.Medium" Class="text-white" />
             </MudLink>
-            <MudLink Href="/" Style="z-index: 1000;"> 
-                <MudText Class="text-white" Style="font-size: 13px !important;">پشتیبانی</MudText>
+            <MudLink Href="/" Class="navigation-support"> 
+                <MudText Class="text-white">پشتیبانی</MudText>
             </MudLink>
             <MudLink Href="/" Class="text-2xl">
                 <MudIcon Icon="@Icons.Material.Filled.Wallet" Size="Size.Medium" Class="text-white" />

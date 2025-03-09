@@ -1,0 +1,89 @@
+/* CargoTypeModal Component Styles */
+.cargo-modal-title {
+    font-weight: bold;
+}
+
+.dark .cargo-modal-title {
+    color: white;
+}
+
+.cargo-modal-subtitle {
+    padding-top: 0.75rem;
+    color: var(--mud-palette-text-secondary);
+}
+
+.cargo-list {
+    border-top: 1px dashed var(--mud-palette-lines);
+    border-bottom: 1px dashed var(--mud-palette-lines);
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+}
+
+.dark .cargo-list {
+    border-color: var(--mud-palette-lines-dark);
+}
+
+.cargo-item {
+    cursor: pointer;
+}
+
+.cargo-icon-container {
+    border-radius: 9999px;
+    background-color: white;
+    padding: 0.625rem;
+}
+
+.dark .cargo-icon-container {
+    background-color: var(--mud-palette-background);
+}
+
+.cargo-info {
+    text-align: right;
+}
+
+.cargo-name {
+    font-weight: 600;
+}
+
+.dark .cargo-name {
+    color: white;
+}
+
+.cargo-description {
+    color: var(--mud-palette-text-secondary);
+}
+
+.cargo-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 1.25rem;
+}
+
+.cargo-cancel-btn {
+    width: 100%;
+    border-radius: 0.75rem;
+    border: 1px solid var(--mud-palette-lines);
+    background-color: white;
+    padding: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--mud-palette-text-secondary);
+}
+
+.dark .cargo-cancel-btn {
+    border-color: var(--mud-palette-lines-dark);
+    background-color: var(--mud-palette-background);
+    color: var(--mud-palette-text-dark);
+}
+
+.cargo-confirm-btn {
+    width: 100%;
+    border-radius: 0.75rem;
+    background-color: var(--mud-palette-primary);
+    padding: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: white;
+} 

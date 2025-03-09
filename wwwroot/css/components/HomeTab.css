@@ -1,0 +1,179 @@
+/* HomeTab Component Styles */
+.homeTab {
+    padding: 0;
+    margin: 0;
+}
+
+.tab-button {
+    display: flex;
+    justify-content: space-between;
+}
+
+.home-tab-item {
+    height: 180px;
+    position: relative;
+    cursor: pointer;
+    border-radius: 1.5rem;
+    padding: 0.25rem;
+}
+
+/* Add missing flex styles */
+.home-tab-item .flex {
+    display: flex;
+}
+
+.home-tab-item .w-full {
+    width: 100%;
+}
+
+.home-tab-item .items-center {
+    align-items: center;
+}
+
+.home-tab-item .justify-center {
+    justify-content: center;
+}
+
+.home-tab-item .rounded-3xl {
+    border-radius: 1.5rem;
+}
+
+.home-tab-item .py-3 {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+}
+
+.home-tab-item .bg-b50 {
+    background-color: var(--mud-palette-background-grey);
+}
+
+.dark .home-tab-item .bg-n50 {
+    background-color: var(--mud-palette-background-dark);
+}
+
+/* Add missing positioning styles */
+.home-tab-item .absolute {
+    position: absolute;
+}
+
+.home-tab-item .bottom-0 {
+    bottom: 0;
+}
+
+.home-tab-item .left-0 {
+    left: 0;
+}
+
+.home-tab-item .right-0 {
+    right: 0;
+}
+
+/* Add missing flex styles for content */
+.home-tab-content {
+    text-align: center;
+    padding: 0.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Add missing border styles */
+.border-b {
+    border-bottom-width: 1px;
+}
+
+.border-dashed {
+    border-style: dashed;
+}
+
+.border-n100 {
+    border-color: var(--mud-palette-lines);
+}
+
+.dark .border-n70 {
+    border-color: var(--mud-palette-lines-dark);
+}
+
+/* Add missing padding styles */
+.pb-4 {
+    padding-bottom: 1rem;
+}
+
+.pt-4 {
+    padding-top: 1rem;
+}
+
+/* Add missing margin styles */
+.mt-7 {
+    margin-top: 1.75rem;
+}
+
+/* Add missing rounded styles */
+.rounded-xl {
+    border-radius: 0.75rem;
+}
+
+/* Add missing padding styles */
+.p-5 {
+    padding: 1.25rem;
+}
+
+.p-3\.5 {
+    padding: 0.875rem;
+}
+
+/* Add missing text styles */
+.text-n400 {
+    color: var(--mud-palette-text-secondary);
+}
+
+.text-n500 {
+    color: var(--mud-palette-text-dark);
+}
+
+.home-tab-item .activeBar {
+    height: 0.125rem;
+    width: 3rem;
+    border-top-left-radius: 9999px;
+    border-top-right-radius: 9999px;
+}
+
+.home-tab-item .activeBar.active {
+    background-color: var(--mud-palette-primary);
+}
+
+.home-tab-item .activeBar.inactive {
+    background-color: var(--mud-palette-background-grey);
+}
+
+.dark .home-tab-item .activeBar.inactive {
+    background-color: var(--mud-palette-background-dark);
+}
+
+.service-icon {
+    width: 84px;
+    height: 84px;
+}
+
+.service-icon lord-icon {
+    width: 100%;
+    height: 100%;
+}
+
+.home-tab-title {
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.home-tab-subtitle {
+    color: var(--mud-palette-text-secondary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dark .home-tab-subtitle {
+    color: var(--mud-palette-text-dark);
+} 

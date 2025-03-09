@@ -1,0 +1,145 @@
+/* VehicleModal Component Styles */
+.popup-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modalBg {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.dark .modalBg {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.modal {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 500px;
+    margin: 1rem;
+}
+
+.modal-content {
+    width: 100%;
+    border-radius: 1rem;
+    background-color: white;
+    padding: 1.75rem;
+}
+
+.dark .modal-content {
+    background-color: var(--mud-palette-background-dark);
+}
+
+/* Add flex utilities */
+.flex {
+    display: flex;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-start {
+    justify-content: flex-start;
+}
+
+.gap-3 {
+    gap: 0.75rem;
+}
+
+/* Add missing styles from the original classes */
+.vehicle-category {
+    padding: 1.25rem 0;
+    border-top: 1px dashed var(--mud-palette-lines);
+    border-bottom: 1px dashed var(--mud-palette-lines);
+}
+
+.vehicle-option {
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s;
+}
+
+.vehicle-option:hover {
+    background-color: var(--mud-palette-background-grey);
+}
+
+.modal-title {
+    font-size: 1.875rem;
+    font-weight: bold;
+}
+
+.dark .modal-title {
+    color: white;
+}
+
+.modal-subtitle {
+    padding-top: 0.75rem;
+    color: var(--mud-palette-text-secondary);
+}
+
+.category-title {
+    font-size: 1.125rem;
+    font-weight: bold;
+    margin-bottom: 0.75rem;
+    text-align: right;
+}
+
+.vehicle-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background-color: white;
+    padding: 0.625rem;
+    font-size: 1.25rem;
+    color: var(--mud-palette-primary);
+}
+
+.dark .vehicle-icon {
+    background-color: var(--mud-palette-background);
+}
+
+.vehicle-info {
+    text-align: right;
+}
+
+.vehicle-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.dark .vehicle-name {
+    color: white;
+}
+
+.option-description {
+    color: var(--mud-palette-text-secondary);
+    font-size: 0.75rem;
+}
+
+.vehicle-checkbox {
+    display: flex;
+    width: 1.5rem;
+    height: 1.5rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    border: 1px solid var(--mud-palette-lines);
+}
+
+.dark .vehicle-checkbox {
+    border-color: var(--mud-palette-lines-dark);
+} 

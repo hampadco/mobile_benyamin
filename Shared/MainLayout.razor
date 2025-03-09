@@ -1,9 +1,29 @@
 @inherits LayoutComponentBase
+@using MudBlazor
 
-<main class="container relative min-h-screen bg-b50 pb-28 dark:bg-n50">
-    <img src="assets/images/top-bg-shape2.png" alt="" class="absolute left-0 right-0 top-0">
-    @Body
-</main>
+<link href="css/components/MainLayout.css" rel="stylesheet" />
+  <style>
+        /* MudBlazor padding overrides */
+        .pl-6,
+        .px-6 {
+            padding-left: 2px !important;
+        }
+
+        .pr-6,
+        .px-6 {
+            padding-right: 2px !important;
+        }
+    </style>
+<MudLayout Style="padding: 0; background: none;">
+    <MudMainContent Style="padding: 0;">
+        <div class="main-container">
+            <MudImage Src="assets/images/top-bg-shape2.png" Alt="" Class="background-shape" />
+            <div class="content-wrapper">
+                @Body
+            </div>
+        </div>
+    </MudMainContent>
+</MudLayout>
 
 @code {
     

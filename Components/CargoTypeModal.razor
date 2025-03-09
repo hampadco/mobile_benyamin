@@ -1,24 +1,26 @@
 @using MudBlazor
 
+<link href="css/components/CargoTypeModal.css" rel="stylesheet" />
+
 <MudDialog @bind-IsVisible="IsOpen" Options="dialogOptions">
     <TitleContent>
-        <MudText Typo="Typo.h4" Class="font-bold dark:text-white">نوع بار</MudText>
-        <MudText Typo="Typo.subtitle1" Class="pt-3 text-n400">نوع بار خود را انتخاب کنید</MudText>
+        <MudText Typo="Typo.h4" Class="cargo-modal-title">نوع بار</MudText>
+        <MudText Typo="Typo.subtitle1" Class="cargo-modal-subtitle">نوع بار خود را انتخاب کنید</MudText>
     </TitleContent>
     <DialogContent>
-        <MudStack Spacing="4" Class="border-y border-dashed border-n100 py-5 dark:border-n70">
+        <MudStack Spacing="4" Class="cargo-list">
             @foreach (var cargo in CargoTypes)
             {
-                <MudPaper Elevation="0" Class="cursor-pointer" @onclick="() => SelectCargo(cargo.Name)">
+                <MudPaper Elevation="0" Class="cargo-item" @onclick="() => SelectCargo(cargo.Name)">
                     <MudGrid Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
                         <MudItem>
                             <MudStack Row="true" Spacing="3">
-                                <MudPaper Elevation="0" Class="rounded-full bg-white p-2.5 dark:bg-n0">
+                                <MudPaper Elevation="0" Class="cargo-icon-container">
                                     <MudIcon Icon="@cargo.Icon" Color="Color.Primary" Size="Size.Large" />
                                 </MudPaper>
-                                <div class="text-right">
-                                    <MudText Typo="Typo.subtitle2" Class="font-semibold dark:text-white">@cargo.Name</MudText>
-                                    <MudText Typo="Typo.body2" Class="text-n400">@cargo.Description</MudText>
+                                <div class="cargo-info">
+                                    <MudText Typo="Typo.subtitle2" Class="cargo-name">@cargo.Name</MudText>
+                                    <MudText Typo="Typo.body2" Class="cargo-description">@cargo.Description</MudText>
                                 </div>
                             </MudStack>
                         </MudItem>
@@ -33,8 +35,10 @@
         </MudStack>
     </DialogContent>
     <DialogActions>
-        <MudButton FullWidth="true" Variant="Variant.Outlined" OnClick="OnClose" Class="rounded-xl">لغو</MudButton>
-        <MudButton FullWidth="true" Variant="Variant.Filled" Color="Color.Primary" OnClick="OnConfirm" Class="rounded-xl">تایید</MudButton>
+        <div class="cargo-actions">
+            <button @onclick="OnClose" class="cargo-cancel-btn">لغو</button>
+            <button @onclick="OnConfirm" class="cargo-confirm-btn">تایید</button>
+        </div>
     </DialogActions>
 </MudDialog>
 

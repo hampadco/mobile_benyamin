@@ -1,0 +1,102 @@
+/* Navigation Component Styles */
+.navigation-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+}
+
+.navigation-wrapper {
+    max-width: 480px;
+    width: 100%;
+    position: relative;
+}
+
+.container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.pt-8 {
+    padding-top: 2rem;
+}
+
+.navigation-inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background-color: var(--mud-palette-primary);
+    padding-bottom: 1rem;
+    padding-top: 1.5rem;
+    color: white;
+    border-radius: 1.5rem 1.5rem 0 0;
+}
+
+.navigation-menu-bg {
+    position: absolute;
+    top: -3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    right: 50%;
+    transform: translateX(50%);
+}
+
+.navigation-menu-icon {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: -25px;
+    display: flex;
+    width: 42px;
+    height: 42px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background-color: white;
+    color: var(--mud-palette-primary);
+}
+
+.navigation-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+}
+
+.navigation-dot {
+    display: block;
+    width: 0.25rem;
+    height: 0.25rem;
+    border-radius: 9999px;
+    background-color: white;
+}
+
+.navigation-menu-bg-image {
+    z-index: -1;
+    width: 170px;
+    margin-top: 15px;
+}
+
+.text-white {
+    color: white;
+}
+
+.text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+}
+
+.navigation-support {
+    font-size: 13px !important;
+} 

@@ -1,6 +1,9 @@
-﻿<MudThemeProvider />
+﻿@using MudBlazor
+
+<MudThemeProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
+<MudPopoverProvider />
 
 <Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
@@ -14,3 +17,40 @@
         </LayoutView>
     </NotFound>
 </Router>
+
+@code {
+    private MudTheme _theme = new MudTheme()
+    {
+        Palette = new PaletteLight()
+        {
+            Primary = "#2563eb",
+            Secondary = "#ff4081",
+            AppbarBackground = "#2563eb",
+            Background = "#f8fafc",
+            DrawerBackground = "#ffffff",
+            DrawerText = "#2563eb",
+            Success = "#00c853"
+        },
+        PaletteDark = new PaletteDark()
+        {
+            Primary = "#2563eb",
+            Secondary = "#ff4081",
+            Background = "#1e293b",
+            AppbarBackground = "#1e293b",
+            DrawerBackground = "#1e293b",
+            DrawerText = "#ffffff",
+            Success = "#00c853"
+        },
+        LayoutProperties = new LayoutProperties()
+        {
+            DefaultBorderRadius = "0.75rem"
+        },
+        Typography = new Typography()
+        {
+            Default = new Default()
+            {
+                FontFamily = new[] { "Homa", "Tahoma", "Arial", "sans-serif" }
+            }
+        }
+    };
+}

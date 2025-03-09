@@ -1,29 +1,30 @@
 @using MudBlazor
 
-<MudContainer MaxWidth="MaxWidth.False" Class="homeTab pa-0 mx-0">
-    <MudGrid Class="tab-button " Spacing="0" Justify="Justify.SpaceBetween">
+<link href="css/components/HomeTab.css" rel="stylesheet" />
+
+<MudContainer MaxWidth="MaxWidth.False" Class="homeTab">
+    <MudGrid Class="tab-button" Spacing="0" Justify="Justify.SpaceBetween">
         @foreach (var tab in _tabs)
         {
             <MudItem xs="4">
                 <div class="px-1">
-                    <MudPaper Elevation="0" Style="height: 180px;" Class="home-tab-item relative cursor-pointer rounded-3xl p-1" @onclick="() => SelectTab(tab.Id)">
+                    <MudPaper Elevation="2" Class="home-tab-item shadow-md transition-shadow hover:shadow-lg" @onclick="() => SelectTab(tab.Id)">
                         <div class="absolute bottom-0 left-0 right-0 flex items-center justify-center">
-                            <div class="activeBar h-0.5 w-12 rounded-t-full @(ActiveTab == tab.Id ? "bg-p1" : "bg-b50 dark:bg-n50")"></div>
+                            <div class="activeBar @(ActiveTab == tab.Id ? "active" : "inactive")"></div>
                         </div>
                         <MudPaper Elevation="0" Class="b flex w-full items-center justify-center rounded-3xl bg-b50 py-3 dark:bg-n50">
-                            <div class="service-icon" style="width: 84px; height: 84px;">
+                            <div class="service-icon">
                                 <lord-icon
                                     src="@tab.IconUrl"
                                     trigger="hover"
                                     colors="primary:#2563eb"
-                                    state="hover"
-                                    style="width:100%;height:100%">
+                                    state="hover">
                                 </lord-icon>
                             </div>
                         </MudPaper>
-                        <div class="text-center px-1 py-1">
-                            <MudText Typo="Typo.body2" Align="Align.Center" Class="font-bold dark:text-white text-truncate">@tab.Title</MudText>
-                            <MudText Typo="Typo.caption" Align="Align.Center" Class="text-n400 dark:text-n500 text-truncate">@tab.Subtitle</MudText>
+                        <div class="home-tab-content">
+                            <MudText Typo="Typo.body2" Align="Align.Center" Class="home-tab-title">@tab.Title</MudText>
+                            <MudText Typo="Typo.caption" Align="Align.Center" Class="home-tab-subtitle">@tab.Subtitle</MudText>
                         </div>
                     </MudPaper>
                 </div>
@@ -33,60 +34,62 @@
 
     @if (ActiveTab == "reserve")
     {
-        <MudPaper Elevation="0" Class="hotelTab mt-7 rounded-3xl p-5">
-            <MudStack Spacing="4">
-                <MudStack AlignItems="AlignItems.Center" Class="pb-4 border-b border-dashed border-n100 dark:border-n70">
+        <MudPaper Elevation="2" Class="hotelTab mt-7 rounded-2xl p-4 shadow-md">
+            <MudStack Spacing="3">
+                <MudStack AlignItems="AlignItems.Center" Class="pb-3 border-b border-dashed border-n100 dark:border-n70">
                     <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
-                        <MudText Typo="Typo.h5" Color="Color.Primary">جستجوی بارها</MudText>
-                        <lord-icon
-                            src="https://cdn.lordicon.com/msoeawqm.json"
-                            trigger="hover"
-                            colors="primary:#2563eb"
-                            style="width:32px;height:32px">
-                        </lord-icon>
+                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                            <MudText Typo="Typo.h6" Color="Color.Primary" Class="text-lg md:text-xl">جستجوی بارها</MudText>
+                            <lord-icon
+                                src="https://cdn.lordicon.com/msoeawqm.json"
+                                trigger="hover"
+                                colors="primary:#2563eb"
+                                style="width:24px;height:24px">
+                            </lord-icon>
+                        </MudStack>
                     </MudStack>
                 </MudStack>
 
-                <MudStack Class="pt-4" Spacing="4">
+                <MudStack Class="pt-2" Spacing="2">
                     <div class="animationOne content" id="flight">
-                        <MudStack Spacing="4">
+                        <MudStack Spacing="2">
                             <MudPaper Elevation="0" Class="w-full">
-                                <MudButton Variant="Variant.Outlined" FullWidth="true" Class="rounded-xl p-3.5">
-                                    <MudText Class="text-n400">انتخاب مبدا</MudText>
+                                <MudButton Variant="Variant.Outlined" FullWidth="true" Class="rounded-xl py-2.5 px-3">
+                                    <MudText Class="text-n400 text-sm md:text-base">انتخاب مبدا</MudText>
                                 </MudButton>
                             </MudPaper>
 
                             <MudPaper Elevation="0" Class="w-full">
-                                <MudButton Variant="Variant.Outlined" FullWidth="true" Class="rounded-xl p-3.5">
-                                    <MudText Class="text-n400">انتخاب مقصد</MudText>
+                                <MudButton Variant="Variant.Outlined" FullWidth="true" Class="rounded-xl py-2.5 px-3">
+                                    <MudText Class="text-n400 text-sm md:text-base">انتخاب مقصد</MudText>
                                 </MudButton>
                             </MudPaper>
 
                             <MudPaper Elevation="0" Class="w-full">
-                                <MudText Class="pb-2" Typo="Typo.subtitle2">تاریخ حمل</MudText>
-                                <MudButton Variant="Variant.Outlined" FullWidth="true" OnClick="OpenDateModal" Class="rounded-xl p-3.5">
-                                    <MudText Class="!text-[30px] text-n500">@SelectedDate</MudText>
+                                <MudText Class="pb-1 text-sm md:text-base" Typo="Typo.subtitle2">تاریخ حمل</MudText>
+                                <MudButton Variant="Variant.Outlined" FullWidth="true" OnClick="OpenDateModal" Class="rounded-xl py-2.5 px-3">
+                                    <MudText Class="text-n500 text-base md:text-xl lg:text-2xl">@SelectedDate</MudText>
                                 </MudButton>
                             </MudPaper>
 
                             <MudGrid Spacing="2">
                                 <MudItem xs="6">
-                                    <MudText Class="pb-2" Typo="Typo.subtitle2">نوع خودرو</MudText>
-                                    <MudButton Variant="Variant.Outlined" FullWidth="true" OnClick="OpenVehicleModal" Class="rounded-xl p-3.5">
-                                        <MudText Class="text-n400">@SelectedVehicle</MudText>
+                                    <MudText Class="pb-1 text-sm md:text-base" Typo="Typo.subtitle2">نوع خودرو</MudText>
+                                    <MudButton Variant="Variant.Outlined" FullWidth="true" OnClick="OpenVehicleModal" Class="rounded-xl py-2.5 px-3">
+                                        <MudText Class="text-n400 text-sm md:text-base">@SelectedVehicle</MudText>
                                     </MudButton>
                                 </MudItem>
 
                                 <MudItem xs="6">
-                                    <MudText Class="pb-2" Typo="Typo.subtitle2">نوع بار</MudText>
-                                    <MudButton Variant="Variant.Outlined" FullWidth="true" OnClick="OpenCargoTypeModal" Class="rounded-xl p-3.5">
-                                        <MudText Class="text-n400">@SelectedCargoType</MudText>
+                                    <MudText Class="pb-1 text-sm md:text-base" Typo="Typo.subtitle2">نوع بار</MudText>
+                                    <MudButton Variant="Variant.Outlined" FullWidth="true" OnClick="OpenCargoTypeModal" Class="rounded-xl py-2.5 px-3">
+                                        <MudText Class="text-n400 text-sm md:text-base">@SelectedCargoType</MudText>
                                     </MudButton>
                                 </MudItem>
                             </MudGrid>
 
-                            <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="SearchCargo" Class="rounded-xl p-3">
-                                جستجوی بار
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="SearchCargo" Class="rounded-xl py-3 mt-1">
+                                <MudText Class="text-base md:text-lg font-medium">جستجوی بار</MudText>
                             </MudButton>
                         </MudStack>
                     </div>
@@ -96,18 +99,18 @@
     }
     else if (ActiveTab == "new-cargo")
     {
-        <MudPaper Elevation="0" Class="hotelTab mt-7 rounded-3xl p-5">
-            <MudStack Spacing="4">
-                <MudStack AlignItems="AlignItems.Center" Class="pb-4 border-b border-dashed border-n100 dark:border-n70">
+        <MudPaper Elevation="2" Class="hotelTab mt-7 rounded-2xl p-4 shadow-md">
+            <MudStack Spacing="3">
+                <MudStack AlignItems="AlignItems.Center" Class="pb-3 border-b border-dashed border-n100 dark:border-n70">
                     <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
-                        <MudText Typo="Typo.h5" Color="Color.Primary">ثبت بار جدید</MudText>
-                        <MudImage Src="assets/images/sadi/1.png" Alt="ثبت بار" Width="32" Height="32" ObjectFit="ObjectFit.Contain" />
+                        <MudText Typo="Typo.h6" Color="Color.Primary" Class="text-lg md:text-xl">ثبت بار جدید</MudText>
+                        <MudImage Src="assets/images/sadi/1.png" Alt="ثبت بار" Width="24" Height="24" ObjectFit="ObjectFit.Contain" />
                     </MudStack>
                 </MudStack>
 
-                <MudStack Class="pt-4" Spacing="4">
+                <MudStack Class="pt-2" Spacing="3">
                     <div class="animationOne content">
-                        <MudImage Src="assets/images/sadi/1.png" Alt="ثبت بار" Class="w-full rounded-xl" ObjectFit="ObjectFit.Cover" Height="300" />
+                        <MudImage Src="assets/images/sadi/1.png" Alt="ثبت بار" Class="w-full h-auto rounded-xl" ObjectFit="ObjectFit.Contain" Style="max-height: 300px; width: 100%;" />
                     </div>
                 </MudStack>
             </MudStack>
@@ -115,18 +118,18 @@
     }
     else if (ActiveTab == "waybill")
     {
-        <MudPaper Elevation="0" Class="hotelTab mt-7 rounded-3xl p-5">
-            <MudStack Spacing="4">
-                <MudStack AlignItems="AlignItems.Center" Class="pb-4 border-b border-dashed border-n100 dark:border-n70">
+        <MudPaper Elevation="2" Class="hotelTab mt-7 rounded-2xl p-4 shadow-md">
+            <MudStack Spacing="3">
+                <MudStack AlignItems="AlignItems.Center" Class="pb-3 border-b border-dashed border-n100 dark:border-n70">
                     <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
-                        <MudText Typo="Typo.h5" Color="Color.Primary">بارنامه</MudText>
-                        <MudImage Src="assets/images/sadi/2.png" Alt="بارنامه" Width="32" Height="32" ObjectFit="ObjectFit.Contain" />
+                        <MudText Typo="Typo.h6" Color="Color.Primary" Class="text-lg md:text-xl">بارنامه</MudText>
+                        <MudImage Src="assets/images/sadi/2.png" Alt="بارنامه" Width="24" Height="24" ObjectFit="ObjectFit.Contain" />
                     </MudStack>
                 </MudStack>
 
-                <MudStack Class="pt-4" Spacing="4">
+                <MudStack Class="pt-2" Spacing="3">
                     <div class="animationOne content">
-                        <MudImage Src="assets/images/sadi/2.png" Alt="بارنامه" Class="w-full rounded-xl" ObjectFit="ObjectFit.Cover" Height="300" />
+                        <MudImage Src="assets/images/sadi/2.png" Alt="بارنامه" Class="w-full h-auto rounded-xl" ObjectFit="ObjectFit.Contain" Style="max-height: 300px; width: 100%;" />
                     </div>
                 </MudStack>
             </MudStack>

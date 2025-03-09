@@ -2,23 +2,23 @@
 
 <div class="relative z-10 px-6 pb-8 pt-6">
     <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
-        <MudStack Row="true" Spacing="5" AlignItems="AlignItems.Center">
-            <MudAvatar Image="assets/images/user.png" Size="Size.Large" Class="size-14" />
+        <MudStack Row="true" Spacing="3" AlignItems="AlignItems.Center">
+            <div class="shadow-xl rounded-full p-0.5 bg-white/10">
+                <MudAvatar Image="assets/images/user.png" Size="Size.Large" Class="!w-[88px] !h-[88px] border-2 border-white"   />
+            </div>
             <MudStack Spacing="0">
                 <MudText Typo="Typo.h6" Color="Color.Surface" Class="text-xl font-semibold text-white">به سامانه شوفر خوش آمدید</MudText>
-                <MudStack Spacing="0" Class="-mt-1">
-                    <MudText Color="Color.Surface" Style="opacity: 0.9" Class="text-lg text-white">رحیم قاسمی</MudText>
-                    <MudText Color="Color.Surface" Style="opacity: 0.8" Class="text-sm -mt-1 text-white">صاحب بار</MudText>
+                <MudStack Spacing="0" Class="mt-1">
+                    <MudText Color="Color.Surface" Class="text-lg text-white">رحیم قاسمی</MudText>
+                    <MudText Color="Color.Surface" Class="text-sm -mt-1 text-white">صاحب بار</MudText>
                 </MudStack>
             </MudStack>
         </MudStack>
-        
         <MudIconButton
             Href="notification.html"
             Icon="@Icons.Material.Filled.Notifications"
-            Color="Color.Surface"
             Size="Size.Large"
-            Class="border border-white size-12 text-white" />
+            Class="border-2 border-white !size-12 text-white" />
     </MudStack>
 </div>
 
