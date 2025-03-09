@@ -1,0 +1,460 @@
+@using System.ComponentModel.DataAnnotations
+@using System.Text.RegularExpressions
+@using Microsoft.JSInterop
+@using Microsoft.AspNetCore.Components
+@inject IJSRuntime JS
+@inject NavigationManager NavigationManager
+@implements IDisposable
+
+<div class="otp-container">
+    <div class="welcome-section">
+        <p class="text-white welcome-text" style="font-size: 20px; font-weight: 600; margin-bottom: 1rem;">کد تایید را وارد کنید</p>
+        <div class="logo-circle entrance-animation">
+            <div class="logo-content">
+                <span class="logo-text">شوفر</span>
+                <div class="logo-underline"></div>
+            </div>
+        </div>
+    </div>
+    <div class="otp-card-wrapper">
+        <div class="otp-card">
+            <div class="phone-display">
+                <span class="phone-number">@PhoneNumber</span>
+                <button class="edit-phone-button" @onclick="OnEditPhoneClick">
+                    اصلاح شماره
+                </button>
+            </div>
+            <div class="input-group">
+                <div class="otp-inputs">
+                    @for (int i = 0; i < 4; i++)
+                    {
+                        var index = i;
+                        <input type="text"
+                               @ref="inputRefs[index]"
+                               class="otp-input @(IsValid ? "" : "is-invalid")"
+                               maxlength="1"
+                               value="@(OtpDigits.Length > index ? OtpDigits[index].ToString() : "")"
+                               @oninput="(e) => OnOtpDigitChanged(e, index)"
+                               @onkeydown="(e) => HandleKeyDown(e, index)" />
+                    }
+                </div>
+                @if (!IsValid && !string.IsNullOrEmpty(OtpDigits))
+                {
+                    <div class="invalid-feedback">
+                        لطفا کد 4 رقمی معتبر را وارد کنید
+                    </div>
+                }
+            </div>
+            <button class="verify-button" disabled="@(!IsValid)" @onclick="HandleVerificationClick">
+                تایید کد
+            </button>
+            <div class="resend-section">
+                <span class="timer">@($"ارسال مجدد کد تا {RemainingSeconds} ثانیه دیگر")</span>
+                <button class="resend-button" disabled="@(!CanResend)" @onclick="HandleResendClick">
+                    ارسال مجدد کد
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .otp-container {
+        margin-top: 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 50vh;
+        padding: 1rem;
+        position: relative;
+    }
+
+    .welcome-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: -1.5rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .logo-circle {
+        width: 120px;
+        height: 120px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1rem;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .logo-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transform: scale(1);
+        transition: transform 0.3s ease;
+    }
+
+    .logo-text {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        margin-bottom: 0.25rem;
+        font-family: 'Vazirmatn', sans-serif;
+    }
+
+    .logo-underline {
+        width: 0;
+        height: 2px;
+        background: white;
+        border-radius: 1px;
+        transition: width 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .otp-card-wrapper {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: 400px;
+        padding-top: 2rem;
+    }
+
+    .otp-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        padding: 2rem;
+        border-radius: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+        width: 100%;
+        transition: all 0.3s ease;
+    }
+
+    .phone-display {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        padding: 0.5rem;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 0.75rem;
+    }
+
+    .phone-number {
+        font-size: 1.1rem;
+        color: #333;
+        direction: ltr;
+    }
+
+    .edit-phone-button {
+        background: none;
+        border: none;
+        color: #2196f3;
+        cursor: pointer;
+        font-size: 0.9rem;
+        padding: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .edit-phone-button:hover {
+        color: #1976d2;
+        text-decoration: underline;
+    }
+
+    .otp-inputs {
+        display: flex;
+        justify-content: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        direction: ltr;
+    }
+
+    .otp-input {
+        width: 50px;
+        height: 50px;
+        text-align: center;
+        font-size: 1.5rem;
+        background: rgba(255, 255, 255, 0.9);
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-radius: 0.75rem;
+        transition: all 0.3s ease;
+    }
+
+    .otp-input:focus {
+        border-color: rgba(33, 150, 243, 0.8);
+        box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.1);
+        outline: none;
+        background: white;
+    }
+
+    .otp-input.is-invalid {
+        border-color: rgba(220, 53, 69, 0.8);
+        background: rgba(255, 255, 255, 0.95);
+    }
+
+    .verify-button {
+        width: 100%;
+        padding: 1rem;
+        font-size: 1rem;
+        color: white;
+        background: rgba(33, 150, 243, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 0.75rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-bottom: 1rem;
+    }
+
+    .verify-button:hover:not(:disabled) {
+        background: rgba(25, 118, 210, 0.95);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
+    }
+
+    .verify-button:disabled {
+        background: rgba(224, 224, 224, 0.8);
+        cursor: not-allowed;
+    }
+
+    .resend-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .timer {
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .resend-button {
+        background: none;
+        border: none;
+        color: #2196f3;
+        cursor: pointer;
+        font-size: 0.9rem;
+        padding: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .resend-button:disabled {
+        color: #999;
+        cursor: not-allowed;
+    }
+
+    .resend-button:hover:not(:disabled) {
+        color: #1976d2;
+        text-decoration: underline;
+    }
+
+    .entrance-animation {
+        opacity: 0;
+        transform: translateY(-50px);
+        animation: entrance 1s ease forwards, settle 0.5s ease 1s forwards, logo-pulse 2s infinite 1.5s;
+    }
+
+    .welcome-text {
+        opacity: 0;
+        animation: fade-in 0.5s ease 1.2s forwards;
+    }
+
+    @@keyframes entrance {
+        0% {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(20px);
+        }
+    }
+
+    @@keyframes settle {
+        0% {
+            transform: translateY(20px);
+        }
+        100% {
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes fade-in {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes logo-pulse {
+        0% {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transform: scale(1);
+        }
+        50% {
+            box-shadow: 0 12px 40px rgba(33, 150, 243, 0.3);
+            transform: scale(1.02);
+        }
+        100% {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transform: scale(1);
+        }
+    }
+</style>
+
+<HeadContent>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@700&display=swap" rel="stylesheet">
+</HeadContent>
+
+@code {
+    [Parameter]
+    public string PhoneNumber { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<string> OnOtpVerified { get; set; }
+
+    [Parameter]
+    public EventCallback OnResendRequested { get; set; }
+
+    [Parameter]
+    public EventCallback OnEditPhoneRequested { get; set; }
+
+    private string OtpDigits { get; set; } = string.Empty;
+    private bool IsValid => OtpDigits.Length == 4 && OtpDigits.All(char.IsDigit);
+    private int RemainingSeconds { get; set; } = 120;
+    private bool CanResend => RemainingSeconds <= 0;
+    private System.Threading.Timer? ResendTimer;
+    private ElementReference[] inputRefs = new ElementReference[4];
+
+    protected override void OnInitialized()
+    {
+        StartResendTimer();
+    }
+
+    private void StartResendTimer()
+    {
+        RemainingSeconds = 120;
+        ResendTimer?.Dispose();
+        ResendTimer = new System.Threading.Timer(_ =>
+        {
+            InvokeAsync(() =>
+            {
+                RemainingSeconds--;
+                if (RemainingSeconds <= 0)
+                {
+                    ResendTimer?.Dispose();
+                }
+                StateHasChanged();
+            });
+        }, null, 0, 1000);
+    }
+
+    private async Task HandleVerificationClick()
+    {
+        if (IsValid)
+        {
+            await OnOtpVerified.InvokeAsync(OtpDigits);
+            NavigationManager.NavigateTo("/index");
+        }
+    }
+
+    private async Task HandleResendClick()
+    {
+        if (CanResend)
+        {
+            await OnResendRequested.InvokeAsync();
+            StartResendTimer();
+        }
+    }
+
+    private async Task OnOtpDigitChanged(ChangeEventArgs e, int index)
+    {
+        string input = e.Value?.ToString() ?? string.Empty;
+        
+        if (string.IsNullOrEmpty(input))
+        {
+            if (index > 0)
+            {
+                OtpDigits = OtpDigits.Remove(index, 1);
+                await inputRefs[index - 1].FocusAsync();
+            }
+        }
+        else
+        {
+            char digit = input.Last();
+            if (char.IsDigit(digit))
+            {
+                if (OtpDigits.Length <= index)
+                {
+                    OtpDigits = OtpDigits.PadRight(index) + digit;
+                }
+                else
+                {
+                    OtpDigits = OtpDigits.Remove(index, 1).Insert(index, digit.ToString());
+                }
+                
+                if (index < 3)
+                {
+                    await inputRefs[index + 1].FocusAsync();
+                }
+                else if (index == 3)
+                {
+                    if (IsValid)
+                    {
+                        await HandleVerificationClick();
+                    }
+                }
+            }
+        }
+        StateHasChanged();
+    }
+
+    private async Task HandleKeyDown(KeyboardEventArgs e, int index)
+    {
+        if (e.Key == "Backspace")
+        {
+            if (string.IsNullOrEmpty(OtpDigits) || index >= OtpDigits.Length || 
+                (string.IsNullOrEmpty(OtpDigits[index].ToString()) && index > 0))
+            {
+                await inputRefs[Math.Max(0, index - 1)].FocusAsync();
+            }
+            else if (!string.IsNullOrEmpty(OtpDigits[index].ToString()))
+            {
+                OtpDigits = OtpDigits.Remove(index, 1);
+                StateHasChanged();
+            }
+        }
+        else if (e.Key == "ArrowLeft" && index > 0)
+        {
+            await inputRefs[index - 1].FocusAsync();
+        }
+        else if (e.Key == "ArrowRight" && index < 3)
+        {
+            await inputRefs[index + 1].FocusAsync();
+        }
+    }
+
+    private async Task OnEditPhoneClick()
+    {
+        await OnEditPhoneRequested.InvokeAsync();
+    }
+
+    public void Dispose()
+    {
+        ResendTimer?.Dispose();
+    }
+} 

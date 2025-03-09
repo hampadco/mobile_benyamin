@@ -1,0 +1,344 @@
+@using System.ComponentModel.DataAnnotations
+@using System.Text.RegularExpressions
+
+@if (!showOtpVerification)
+{
+    <div class="phone-container">
+        <div class="welcome-section">
+            <p class="text-white welcome-text" style="font-size: 20px; font-weight: 600; margin-bottom: 1rem;">به سامانه یکپارچه شوفر خوش آمدید</p>
+            <div class="logo-circle entrance-animation">
+                <div class="logo-content">
+                    <span class="logo-text">شوفر</span>
+                    <div class="logo-underline"></div>
+                </div>
+            </div>
+        </div>
+        <div class="phone-card-wrapper">
+            <div class="phone-card">
+                <div class="input-group">
+                    <input type="tel" 
+                           class="form-control @(IsValid ? "" : "is-invalid")"
+                           value="@Value"
+                           @oninput="OnPhoneNumberChanged"
+                           maxlength="11"
+                           placeholder="شماره موبایل خود را وارد کنید..." />
+                    @if (!IsValid)
+                    {
+                        <div class="invalid-feedback">
+                            لطفا یک شماره موبایل معتبر وارد کنید (مثال: 09123456789)
+                        </div>
+                    }
+                </div>
+                <button class="verify-button" disabled="@(!IsValid)" @onclick="HandleVerificationClick">
+                    ارسال کد تایید
+                </button>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <VerifyOTP 
+        PhoneNumber="@Value"
+        OnOtpVerified="HandleOtpVerified"
+        OnResendRequested="HandleResendOtp"
+        OnEditPhoneRequested="HandleEditPhone" />
+}
+
+<style>
+    .phone-container {
+        margin-top:30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 50vh;
+        padding:1rem;
+        position: relative;
+    }
+
+    .welcome-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: -1.5rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .logo-circle {
+        width: 120px;
+        height: 120px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1rem;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .logo-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transform: scale(1);
+        transition: transform 0.3s ease;
+    }
+
+    .logo-text {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        margin-bottom: 0.25rem;
+        font-family: 'Vazirmatn', sans-serif;
+    }
+
+    .logo-underline {
+        width: 0;
+        height: 2px;
+        background: white;
+        border-radius: 1px;
+        transition: width 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo-circle:hover .logo-content {
+        transform: scale(1.1);
+    }
+
+    .logo-circle:hover .logo-underline {
+        width: 100%;
+    }
+
+    .logo-circle:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .phone-card-wrapper {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: 400px;
+        padding-top: 2rem;
+    }
+
+    .phone-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        padding: 2rem;
+        border-radius: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+        width: 100%;
+        transition: all 0.3s ease;
+    }
+
+    .phone-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 40px rgba(31, 38, 135, 0.2);
+        background: rgba(255, 255, 255, 0.85);
+    }
+
+    .input-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+        background: rgba(255, 255, 255, 0.9);
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-radius: 0.75rem;
+        transition: all 0.3s ease;
+        text-align: center;
+        direction: ltr;
+        backdrop-filter: blur(5px);
+    }
+
+    .form-control:focus {
+        border-color: rgba(33, 150, 243, 0.8);
+        box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.1);
+        outline: none;
+        background: white;
+    }
+
+    .form-control::placeholder {
+        color: #9e9e9e;
+        font-size: 1rem;
+    }
+
+    .is-invalid {
+        border-color: rgba(220, 53, 69, 0.8);
+        background: rgba(255, 255, 255, 0.95);
+    }
+
+    .invalid-feedback {
+        width: 100%;
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+        color: #dc3545;
+        text-align: center;
+    }
+
+    .verify-button {
+        width: 100%;
+        padding: 1rem;
+        font-size: 1rem;
+        color: white;
+        background: rgba(33, 150, 243, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 0.75rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(5px);
+    }
+
+    .verify-button:hover:not(:disabled) {
+        background: rgba(25, 118, 210, 0.95);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
+    }
+
+    .verify-button:disabled {
+        background: rgba(224, 224, 224, 0.8);
+        cursor: not-allowed;
+    }
+       .logo-content {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        width: 100px;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+
+    .entrance-animation {
+        opacity: 0;
+        transform: translateY(-50px);
+        animation: entrance 1s ease forwards, settle 0.5s ease 1s forwards, logo-pulse 2s infinite 1.5s;
+    }
+
+    .welcome-text {
+        opacity: 0;
+        animation: fade-in 0.5s ease 1.2s forwards;
+    }
+
+    @@keyframes entrance {
+        0% {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(20px);
+        }
+    }
+
+    @@keyframes settle {
+        0% {
+            transform: translateY(20px);
+        }
+        100% {
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes fade-in {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes logo-pulse {
+        0% {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transform: scale(1);
+        }
+        50% {
+            box-shadow: 0 12px 40px rgba(33, 150, 243, 0.3);
+            transform: scale(1.02);
+        }
+        100% {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transform: scale(1);
+        }
+    }
+</style>
+
+<HeadContent>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@700&display=swap" rel="stylesheet">
+</HeadContent>
+
+@code {
+    [Parameter]
+    public string Value { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    private bool IsValid => !string.IsNullOrEmpty(Value) && 
+                          Regex.IsMatch(Value, @"^09\d{9}$");
+
+    [Parameter]
+    public EventCallback<string> OnVerificationRequested { get; set; }
+
+    private bool showOtpVerification = false;
+
+    private async Task HandleVerificationClick()
+    {
+        if (IsValid)
+        {
+            await OnVerificationRequested.InvokeAsync(Value);
+            showOtpVerification = true;
+        }
+    }
+
+    private async Task OnPhoneNumberChanged(ChangeEventArgs e)
+    {
+        string input = e.Value?.ToString() ?? string.Empty;
+        
+        // فقط اعداد را نگه می‌داریم
+        string numbersOnly = new string(input.Where(char.IsDigit).ToArray());
+        
+        // محدود کردن به 11 رقم
+        if (numbersOnly.Length > 11)
+        {
+            numbersOnly = numbersOnly[..11];
+        }
+        
+        await ValueChanged.InvokeAsync(numbersOnly);
+    }
+
+    private async Task HandleOtpVerified(string otp)
+    {
+        // اینجا می‌توانید کد تایید را به سرور ارسال کنید
+        Console.WriteLine($"OTP Verified: {otp}");
+    }
+
+    private async Task HandleResendOtp()
+    {
+        // اینجا می‌توانید درخواست ارسال مجدد کد را به سرور ارسال کنید
+        await OnVerificationRequested.InvokeAsync(Value);
+    }
+
+    private async Task HandleEditPhone()
+    {
+        showOtpVerification = false;
+    }
+} 

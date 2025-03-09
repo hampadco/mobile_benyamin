@@ -1,9 +1,12 @@
 ﻿@using MudBlazor
+@using Microsoft.AspNetCore.Components.Routing
 
 <MudThemeProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 <MudPopoverProvider />
+
+<InitialLoader />
 
 <Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">

@@ -1,0 +1,16 @@
+@page "/register"
+@page "/"
+
+@using mobilebenyamin.Components.Register
+
+<PhoneNumber @bind-Value="phoneNumber" OnVerificationRequested="HandleVerificationRequested" />
+
+@code {
+    private string phoneNumber = "";
+
+    private async Task HandleVerificationRequested(string number)
+    {
+        // اینجا کد ارسال پیامک تایید را قرار دهید
+        await Task.CompletedTask;
+    }
+} 
