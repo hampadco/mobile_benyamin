@@ -1,7 +1,7 @@
 {
-  "name": "بنیامین ترابر پارسیان - سامانه حمل و نقل بار و لجستیک",
+  "name": "شوفر",
   "short_name": "بنیامین ترابر پارسیان",
-  "start_url": "./",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",
@@ -18,5 +18,5 @@
       "type": "image/png"
     }
   ],
-  "description": "اپلیکیشن رزرو آنلاین پرواز و هتل"
+  "description": "اپلکیشن شوفر"
 }
