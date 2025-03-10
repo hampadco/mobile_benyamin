@@ -10,7 +10,7 @@
 
 <link href="css/video-authentication.css" rel="stylesheet" />
 
-<MudPaper Elevation="0" Class="video-auth-container">
+           <MudPaper Elevation="0" Class="auth-requirement-container waybill-auth-paper mt-7 shadow-lg hover:shadow-xl transition-shadow duration-300" style="margin: 3px;padding-bottom:100pxpx;border-radius: 25px;">
     <MudStack AlignItems="AlignItems.Center" Spacing="3">
         @if (!isPreviewMode)
         {
@@ -38,15 +38,16 @@
             </div>
         }
 
-        <MudPaper Elevation="0" Class="w-full max-w-sm mt-4">
-            <MudStack Row="true" Justify="Justify.SpaceBetween">
+           <MudPaper Elevation="0" Class="auth-requirement-container waybill-auth-paper mt-7 shadow-lg hover:shadow-xl transition-shadow duration-300" style="margin: 3px;padding-bottom:100pxpx;border-radius: 25px;">
+
+            <MudStack Row="true" Justify="Justify.SpaceBetween" Class="button-container">
                 <MudButton 
                     Variant="Variant.Filled" 
                     Color="Color.Error"
                     OnClick="HandleBack"
-                    Class="flex-1 py-2 rounded-lg">
+                    Class="action-button">
                     <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
-                        <MudIcon Icon="@Icons.Material.Filled.ArrowForward" Size="Size.Medium" />
+                        <MudIcon Icon="@Icons.Material.Filled.ArrowForward" Size="Size.Small" />
                         <MudText>برگشت</MudText>
                     </MudStack>
                 </MudButton>
@@ -57,9 +58,9 @@
                         Variant="Variant.Filled" 
                         Color="Color.Primary"
                         OnClick="StartRecording"
-                        Class="flex-1 py-2 rounded-lg">
+                        Class="action-button">
                         <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
-                            <MudIcon Icon="@Icons.Material.Filled.Videocam" Size="Size.Medium" />
+                            <MudIcon Icon="@Icons.Material.Filled.Videocam" Size="Size.Small" />
                             <MudText>شروع ضبط</MudText>
                         </MudStack>
                     </MudButton>
@@ -70,9 +71,9 @@
                         Variant="Variant.Filled" 
                         Color="Color.Warning"
                         OnClick="RetryRecording"
-                        Class="flex-1 py-2 rounded-lg mx-2">
+                        Class="action-button">
                         <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
-                            <MudIcon Icon="@Icons.Material.Filled.Refresh" Size="Size.Medium" />
+                            <MudIcon Icon="@Icons.Material.Filled.Refresh" Size="Size.Small" />
                             <MudText>ضبط مجدد</MudText>
                         </MudStack>
                     </MudButton>
@@ -81,9 +82,9 @@
                         Variant="Variant.Filled" 
                         Color="Color.Success"
                         OnClick="ConfirmRecording"
-                        Class="flex-1 py-2 rounded-lg">
+                        Class="action-button">
                         <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
-                            <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Medium" />
+                            <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" />
                             <MudText>تایید</MudText>
                         </MudStack>
                     </MudButton>

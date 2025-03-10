@@ -2,7 +2,7 @@
 
 @if (!ShowVerification)
 {
-    <MudPaper Elevation="0" Class="auth-requirement-container">
+    <MudPaper Elevation="0" Class="auth-requirement-container waybill-auth-paper mt-7 shadow-lg hover:shadow-xl transition-shadow duration-300" style="margin: 3px;padding-bottom:100pxpx;border-radius: 25px;">
         <MudStack AlignItems="AlignItems.Center" Spacing="3" Class="relative">
             <div class="background-icon">
                 <MudImage Src="/assets/images/sadi/1.png" Alt="background" Style="width:300px;height:300px;opacity:0.15" ObjectFit="ObjectFit.Cover" />
@@ -17,9 +17,9 @@
                 </lord-icon>
             </div>
             <MudText Typo="Typo.h6" Color="Color.Primary" Class="text-center">برای ثبت بار نیاز به احراز هویت دارید</MudText>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" Class="auth-button px-8 py-3 rounded-lg" OnClick="@(() => ShowVerification = true)">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" Class="auth-button px-8 py-3 rounded-lg mt-1" OnClick="@(() => ShowVerification = true)">
                 <MudStack Row="true" Spacing="3" AlignItems="AlignItems.Center">
-                    <MudIcon Icon="@Icons.Material.Filled.Login" Size="Size.Large" />
+                   
                     <MudText Class="text-lg font-medium">شروع احراز هویت</MudText>
                 </MudStack>
             </MudButton>

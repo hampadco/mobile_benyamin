@@ -10,7 +10,7 @@
         {
             <MudItem xs="4">
                 <div class="px-1">
-                    <MudPaper Elevation="2" Class="home-tab-item shadow-md transition-shadow hover:shadow-lg" @onclick="() => SelectTab(tab.Id)">
+                    <MudPaper Elevation="2" Class="home-tab-item shadow-md transition-shadow hover:shadow-lg" @onclick="() => SelectTab(tab.Id)" >
                         <div class="absolute bottom-0 left-0 right-0 flex items-center justify-center">
                             <div class="activeBar @(ActiveTab == tab.Id ? "active" : "inactive")"></div>
                         </div>
@@ -37,7 +37,8 @@
     <div id="reserve-section">
         @if (ActiveTab == "reserve")
         {
-            <MudPaper Elevation="2" Class="hotelTab mt-7 rounded-2xl p-4 shadow-md">
+                <MudPaper Elevation="0" Class="auth-requirement-container waybill-auth-paper mt-7 shadow-lg hover:shadow-xl transition-shadow duration-300" style="margin: 3px;padding-bottom:100pxpx;border-radius: 25px;">
+
                 <MudStack Spacing="3">
                     <MudStack AlignItems="AlignItems.Center" Class="pb-3 border-b border-dashed border-n100 dark:border-n70">
                         <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
@@ -57,20 +58,20 @@
                         <div class="animationOne content" id="flight">
                             <MudStack Spacing="2">
                                 <MudPaper Elevation="0" Class="w-full">
-                                    <MudButton Variant="Variant.Outlined" FullWidth="true" Class="rounded-xl py-2.5 px-3">
+                                    <MudButton Variant="Variant.Outlined" FullWidth="true" Class=" py-2.5 px-3">
                                         <MudText Class="text-n400 text-sm md:text-base">انتخاب مبدا</MudText>
                                     </MudButton>
                                 </MudPaper>
 
                                 <MudPaper Elevation="0" Class="w-full">
-                                    <MudButton Variant="Variant.Outlined" FullWidth="true" Class="rounded-xl py-2.5 px-3">
+                                    <MudButton Variant="Variant.Outlined" FullWidth="true" Class=" py-2.5 px-3">
                                         <MudText Class="text-n400 text-sm md:text-base">انتخاب مقصد</MudText>
                                     </MudButton>
                                 </MudPaper>
 
                                 <MudPaper Elevation="0" Class="w-full">
                                     <MudText Class="pb-1 text-sm md:text-base" Typo="Typo.subtitle2">تاریخ حمل</MudText>
-                                    <MudButton Variant="Variant.Outlined" FullWidth="true" OnClick="OpenDateModal" Class="rounded-xl py-2.5 px-3">
+                                    <MudButton Variant="Variant.Outlined" FullWidth="true" OnClick="OpenDateModal" Class=" py-2.5 px-3">
                                         <MudText Class="text-n500 text-base md:text-xl lg:text-2xl">@SelectedDate</MudText>
                                     </MudButton>
                                 </MudPaper>
@@ -78,53 +79,52 @@
                                 <MudGrid Spacing="2">
                                     <MudItem xs="6">
                                         <MudText Class="pb-1 text-sm md:text-base" Typo="Typo.subtitle2">نوع خودرو</MudText>
-                                        <MudButton Variant="Variant.Outlined" FullWidth="true" OnClick="OpenVehicleModal" Class="rounded-xl py-2.5 px-3">
+                                        <MudButton Variant="Variant.Outlined" FullWidth="true" OnClick="OpenVehicleModal" Class=" py-2.5 px-3">
                                             <MudText Class="text-n400 text-sm md:text-base">@SelectedVehicle</MudText>
                                         </MudButton>
                                     </MudItem>
 
                                     <MudItem xs="6">
                                         <MudText Class="pb-1 text-sm md:text-base" Typo="Typo.subtitle2">نوع بار</MudText>
-                                        <MudButton Variant="Variant.Outlined" FullWidth="true" OnClick="OpenCargoTypeModal" Class="rounded-xl py-2.5 px-3">
+                                        <MudButton Variant="Variant.Outlined" FullWidth="true" OnClick="OpenCargoTypeModal" Class=" py-2.5 px-3">
                                             <MudText Class="text-n400 text-sm md:text-base">@SelectedCargoType</MudText>
                                         </MudButton>
                                     </MudItem>
                                 </MudGrid>
 
-                                <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="SearchCargo" Class="rounded-xl py-3 mt-1">
+                                <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="SearchCargo" Class=" py-3 mt-1">
                                     <MudText Class="text-base md:text-lg font-medium">جستجوی بار</MudText>
                                 </MudButton>
                             </MudStack>
                         </div>
                     </MudStack>
                 </MudStack>
-            </MudPaper>
+                </MudPaper>
         }
     </div>
 
     <div id="new-cargo-section">
         @if (ActiveTab == "new-cargo")
         {
-            <MudPaper Elevation="2" Class="hotelTab mt-7 rounded-2xl p-4 shadow-md">
                 <MudStack Class="pt-2" Spacing="3">
                     <div class="animationOne content">
                         <NewCargoAuth />
                     </div>
                 </MudStack>
-            </MudPaper>
+            
         }
     </div>
 
     <div id="waybill-section">
         @if (ActiveTab == "waybill")
         {
-            <MudPaper Elevation="2" Class="hotelTab mt-7 rounded-2xl p-4 shadow-md">
+            
                 <MudStack Class="pt-2" Spacing="3">
                     <div class="animationOne content">
                         <WaybillAuth />
                     </div>
                 </MudStack>
-            </MudPaper>
+           
         }
     </div>
 </MudContainer>
@@ -136,8 +136,8 @@
 @code {
     private string ActiveTab = "reserve";
     private string SelectedDate = "انتخاب تاریخ";
-    private string SelectedVehicle = "انتخاب نوع خودرو";
-    private string SelectedCargoType = "انتخاب نوع بار";
+    private string SelectedVehicle = " نوع خودرو";
+    private string SelectedCargoType = " نوع بار";
 
     private bool isDateModalOpen;
     private bool isVehicleModalOpen;

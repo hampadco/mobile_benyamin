@@ -23,7 +23,7 @@
 
 @if (!ShowUserInfo)
 {
-    <MudPaper Elevation="0" Class="auth-requirement-container">
+    <MudPaper Elevation="0" Class="auth-requirement-container waybill-auth-paper mt-7 shadow-lg hover:shadow-xl transition-shadow duration-300" style="margin: 3px;padding-bottom:100pxpx;border-radius: 25px;">
         <MudStack AlignItems="AlignItems.Center" Spacing="3" Class="relative">
             <div class="background-icon">
                 <MudImage Src="/assets/images/sadi/1.png" Alt="background" Style="width:400px;height:400px;opacity:0.15" ObjectFit="ObjectFit.Cover" />
@@ -42,7 +42,6 @@
             <MudPaper Elevation="0" Class="w-full max-w-sm">
                 <MudTextField 
                     @bind-Value="NationalId"
-                    Label="کد ملی"
                     Variant="Variant.Outlined"
                     InputType="InputType.Number"
                     Immediate="true"

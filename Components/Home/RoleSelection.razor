@@ -2,7 +2,8 @@
 
 @if (!ShowCargoOwnerType && !ShowVideoAuth)
 {
-    <MudPaper Elevation="0" Class="auth-requirement-container">
+       <MudPaper Elevation="0" Class="auth-requirement-container waybill-auth-paper mt-7 shadow-lg hover:shadow-xl transition-shadow duration-300" style="margin: 3px;padding-bottom:100pxpx;border-radius: 25px;">
+
         <MudStack AlignItems="AlignItems.Center" Spacing="3" Class="relative">
             <div class="background-icon">
                 <MudImage Src="/assets/images/sadi/2.png" Alt="background" Style="width:400px;height:400px;opacity:0.15" ObjectFit="ObjectFit.Cover" />
@@ -28,7 +29,7 @@
                         OnClick="@(() => HandleRoleSelection(true))"
                         Class="py-4 rounded-lg">
                         <MudStack Row="true" Spacing="3" AlignItems="AlignItems.Center">
-                            <MudIcon Icon="@Icons.Material.Filled.LocalShipping" Size="Size.Large" />
+                            <MudIcon Icon="@Icons.Material.Filled.AccountBox" Size="Size.Large" />
                             <MudText Class="text-lg font-medium">صاحب بار هستم</MudText>
                         </MudStack>
                     </MudButton>
@@ -41,7 +42,7 @@
                         OnClick="@(() => HandleRoleSelection(false))"
                         Class="py-4 rounded-lg">
                         <MudStack Row="true" Spacing="3" AlignItems="AlignItems.Center">
-                            <MudIcon Icon="@Icons.Material.Filled.DriveEta" Size="Size.Large" />
+                            <MudIcon Icon="@Icons.Material.Filled.LocalShipping" Size="Size.Large" />
                             <MudText Class="text-lg font-medium">راننده هستم</MudText>
                         </MudStack>
                     </MudButton>
