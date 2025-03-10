@@ -1,0 +1,29 @@
+﻿
+<style>
+    .bottom-center {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+</style>
+<MudPaper Class="rounded-pill bottom-center pa-3" Width="200px">
+    <MudStack Row="true">
+        <MudItem><MudLink Underline="Underline.None" ><MudText Inline="true"><MudIcon Color="Color.Primary" Icon="@Icons.Material.Outlined.Sort" Size="Size.Medium"></MudIcon>مرتب سازی</MudText></MudLink></MudItem>
+        <MudSpacer />
+        <MudItem><MudLink ><MudText><MudIcon  Color="Color.Primary" Icon="@Icons.Material.Outlined.EditNote" Size="Size.Medium"></MudIcon>فیلتر</MudText></MudLink></MudItem>
+    </MudStack>
+
+</MudPaper>
+@code {
+    private Action<MouseEventArgs> OpenSortDrawer()
+    {
+        throw new NotImplementedException();
+    }
+
+    private Action<MouseEventArgs> OpenFilterDrawer()
+    {
+        throw new NotImplementedException();
+    }
+
+}
