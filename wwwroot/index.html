@@ -3,11 +3,18 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بنیامین ترابر پارسیان - سامانه حمل و نقل بار و لجستیک</title>
+    <title>شوفر - سامانه حمل و نقل بار و لجستیک</title>
     <base href="/" />
     
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#03173d">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="شوفر">
+    <link rel="apple-touch-icon" href="assets/images/logo.png">
+    
     <!-- Favicon -->
-    <link rel="shortcut icon" href="images/logo.png" type="image/x-icon">
+    <link rel="shortcut icon" href="assets/images/logo.png" type="image/x-icon">
     
     <!-- Bootstrap CSS -->
     <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -56,6 +63,18 @@
     <script src="assets/js/main.js"></script>
     <script src="js/video-authentication.js"></script>
     <script src="js/smoothScroll.js"></script>
+    <script src="js/pwa-install.js"></script>
+
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js').then(function(registration) {
+                console.log('Service Worker registered with scope:', registration.scope);
+            }).catch(function(err) {
+                console.log('Service Worker registration failed:', err);
+            });
+        }
+    </script>
   </body>
 </html>
 
