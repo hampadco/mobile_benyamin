@@ -1,0 +1,154 @@
+@using MudBlazor
+@using Microsoft.AspNetCore.Components.Web
+
+<style>
+    .national-id-field {
+        background-color: transparent !important;
+    }
+    .national-id-field ::deep .mud-input {
+        text-align: left !important;
+        direction: ltr !important;
+    }
+    .national-id-field ::deep .mud-input-label {
+        text-align: right !important;
+        right: 0 !important;
+        left: auto !important;
+        background-color: transparent !important;
+    }
+    .national-id-field ::deep .mud-input-adornment-end {
+        margin-left: 0 !important;
+        margin-right: auto !important;
+    }
+</style>
+
+@if (!ShowUserInfo)
+{
+    <MudPaper Elevation="0" Class="auth-requirement-container">
+        <MudStack AlignItems="AlignItems.Center" Spacing="3" Class="relative">
+            <div class="background-icon">
+                <MudImage Src="/assets/images/sadi/1.png" Alt="background" Style="width:400px;height:400px;opacity:0.15" ObjectFit="ObjectFit.Cover" />
+            </div>
+            <div class="front-icon">
+                <lord-icon
+                    src="https://cdn.lordicon.com/bhfjfgqz.json"
+                    trigger="loop"
+                    delay="2000"
+                    colors="primary:#2563eb,secondary:#2563eb"
+                    style="width:100px;height:100px">
+                </lord-icon>
+            </div>
+            <MudText Typo="Typo.h6" Color="Color.Primary" Class="text-center">لطفا کد ملی خود را وارد کنید</MudText>
+            
+            <MudPaper Elevation="0" Class="w-full max-w-sm">
+                <MudTextField 
+                    @bind-Value="NationalId"
+                    Label="کد ملی"
+                    Variant="Variant.Outlined"
+                    InputType="InputType.Number"
+                    Immediate="true"
+                    Pattern="[0-9]*"
+                    MaxLength="10"
+                    Adornment="Adornment.End"
+                    AdornmentIcon="@Icons.Material.Filled.Badge"
+                    Error="@(!string.IsNullOrEmpty(ErrorMessage))"
+                    ErrorText="@ErrorMessage"
+                    Class="mt-4 national-id-field"
+                    AutoFocus="true"
+                />
+                
+                <MudButton 
+                    Variant="Variant.Filled" 
+                    Color="Color.Primary" 
+                    Size="Size.Large" 
+                    FullWidth="true"
+                    OnClick="@(() => ShowUserInfo = true)"
+                    Disabled="@(!IsValidNationalId)"
+                    Class="mt-4 py-3 rounded-lg">
+                    <MudStack Row="true" Spacing="3" AlignItems="AlignItems.Center">
+                        <MudIcon Icon="@Icons.Material.Filled.VerifiedUser" Size="Size.Medium" />
+                        <MudText Class="text-lg font-medium">استعلام و تایید هویت</MudText>
+                    </MudStack>
+                </MudButton>
+            </MudPaper>
+        </MudStack>
+    </MudPaper>
+}
+else
+{
+    <UserInfoDisplay NationalId="@NationalId" OnBack="@HandleBack" />
+}
+
+@code {
+    private string _nationalId = "";
+    private string ErrorMessage { get; set; } = "";
+    private bool ShowUserInfo { get; set; } = false;
+
+    private string NationalId
+    {
+        get => _nationalId;
+        set
+        {
+            _nationalId = value;
+            // اگر کد ملی کامل و معتبر بود، اطلاعات کاربر را نمایش بده
+            if (value.Length == 10 && IsValidNationalId)
+            {
+                ShowUserInfo = true;
+            }
+        }
+    }
+
+    private void HandleBack()
+    {
+        ShowUserInfo = false;
+        StateHasChanged();
+    }
+
+    private bool IsValidNationalId
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(NationalId) || NationalId.Length != 10)
+            {
+                ErrorMessage = "کد ملی باید 10 رقم باشد";
+                return false;
+            }
+
+            if (!NationalId.All(char.IsDigit))
+            {
+                ErrorMessage = "کد ملی فقط باید شامل اعداد باشد";
+                return false;
+            }
+
+            // الگوریتم اعتبارسنجی کد ملی
+            int[] coefficients = { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+            int sum = 0;
+            
+            for (int i = 0; i < 9; i++)
+            {
+                sum += (NationalId[i] - '0') * coefficients[i];
+            }
+
+            int remainder = sum % 11;
+            int controlDigit = NationalId[9] - '0';
+            
+            bool isValid = remainder < 2 ? controlDigit == remainder : controlDigit == 11 - remainder;
+            
+            ErrorMessage = isValid ? "" : "کد ملی نامعتبر است";
+            return isValid;
+        }
+    }
+
+    private void HandleKeyPress(KeyboardEventArgs e)
+    {
+        // اجازه ورود فقط اعداد و کلیدهای کنترلی
+        if (!char.IsDigit(e.Key[0]) && 
+            e.Key != "Backspace" && 
+            e.Key != "Delete" && 
+            e.Key != "Tab" && 
+            e.Key != "ArrowLeft" && 
+            e.Key != "ArrowRight")
+        {
+            return;
+        }
+    }
+} 

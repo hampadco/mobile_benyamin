@@ -1,0 +1,191 @@
+@using MudBlazor
+@using Microsoft.AspNetCore.Components.Web
+
+<style>
+    .national-id-field {
+        background-color: transparent !important;
+    }
+    .national-id-field ::deep .mud-input {
+        text-align: left !important;
+        direction: ltr !important;
+    }
+    .national-id-field ::deep .mud-input-label {
+        text-align: right !important;
+        right: 0 !important;
+        left: auto !important;
+        background-color: transparent !important;
+    }
+    .national-id-field ::deep .mud-input-adornment-end {
+        margin-left: 0 !important;
+        margin-right: auto !important;
+    }
+</style>
+
+@if (!ShowCompanyInfo)
+{
+    <MudPaper Elevation="0" Class="auth-requirement-container">
+        <MudStack AlignItems="AlignItems.Center" Spacing="3" Class="relative">
+            <div class="background-icon">
+                <MudImage Src="/assets/images/sadi/2.png" Alt="background" Style="width:400px;height:400px;opacity:0.15" ObjectFit="ObjectFit.Cover" />
+            </div>
+            <div class="front-icon">
+                <lord-icon
+                    src="https://cdn.lordicon.com/dxjqoygy.json"
+                    trigger="loop"
+                    delay="2000"
+                    colors="primary:#2563eb,secondary:#2563eb"
+                    style="width:100px;height:100px">
+                </lord-icon>
+            </div>
+            <MudText Typo="Typo.h6" Color="Color.Primary" Class="text-center">لطفا شناسه ملی شرکت را وارد کنید</MudText>
+            
+            <MudPaper Elevation="0" Class="w-full max-w-sm">
+                <MudTextField 
+                    @bind-Value="CompanyNationalId"
+                    Label="شناسه ملی شرکت"
+                    Variant="Variant.Outlined"
+                    Adornment="Adornment.End"
+                    AdornmentIcon="@Icons.Material.Filled.Business"
+                    MaxLength="11"
+                    InputType="InputType.Text"
+                    Immediate="true"
+                    OnKeyDown="@(e => HandleKeyPress(e))"
+                    Error="@(!string.IsNullOrEmpty(ErrorMessage))"
+                    ErrorText="@ErrorMessage"
+                    Class="mt-3 national-id-field"
+                    AutoFocus="true"
+                />
+                
+                <MudButton 
+                    Variant="Variant.Filled" 
+                    Color="Color.Primary" 
+                    Size="Size.Large" 
+                    FullWidth="true"
+                    OnClick="@(() => ShowCompanyInfo = true)"
+                    Disabled="@(!IsValidCompanyId)"
+                    Class="mt-4 py-3 rounded-lg">
+                    <MudStack Row="true" Spacing="3" AlignItems="AlignItems.Center">
+                        <MudIcon Icon="@Icons.Material.Filled.VerifiedUser" Size="Size.Medium" />
+                        <MudText Class="text-lg font-medium">استعلام و تایید شناسه ملی</MudText>
+                    </MudStack>
+                </MudButton>
+
+                <MudButton 
+                    Variant="Variant.Filled" 
+                    Color="Color.Error" 
+                    Size="Size.Large" 
+                    FullWidth="true"
+                    OnClick="@(() => OnBack.InvokeAsync())"
+                    Class="mt-2 py-3 rounded-lg">
+                    <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+                        <MudIcon Icon="@Icons.Material.Filled.ArrowForward" Size="Size.Medium" />
+                        <MudText Class="text-lg font-medium">برگشت</MudText>
+                    </MudStack>
+                </MudButton>
+            </MudPaper>
+        </MudStack>
+    </MudPaper>
+}
+else
+{
+    <CompanyInfoDisplay CompanyNationalId="@CompanyNationalId" OnBack="@HandleBack" />
+}
+
+@code {
+    [Parameter]
+    public EventCallback OnBack { get; set; }
+
+    private string _companyNationalId = "";
+    private string ErrorMessage { get; set; } = "";
+    private bool ShowCompanyInfo { get; set; } = false;
+
+    private string CompanyNationalId
+    {
+        get => _companyNationalId;
+        set
+        {
+            _companyNationalId = value;
+            // اگر شناسه ملی شرکت کامل و معتبر بود، اطلاعات شرکت را نمایش بده
+            if (value.Length == 11 && IsValidCompanyId)
+            {
+                ShowCompanyInfo = true;
+            }
+        }
+    }
+
+    private void HandleBack()
+    {
+        ShowCompanyInfo = false;
+        StateHasChanged();
+    }
+
+    private bool IsValidCompanyId
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(CompanyNationalId) || CompanyNationalId.Length != 11)
+            {
+                ErrorMessage = "شناسه ملی شرکت باید 11 رقم باشد";
+                return false;
+            }
+
+            if (!CompanyNationalId.All(char.IsDigit))
+            {
+                ErrorMessage = "شناسه ملی شرکت فقط باید شامل اعداد باشد";
+                return false;
+            }
+
+            // بررسی شناسه‌های تکراری
+            if (CompanyNationalId == "00000000000" || CompanyNationalId == "11111111111" ||
+                CompanyNationalId == "22222222222" || CompanyNationalId == "33333333333" ||
+                CompanyNationalId == "44444444444" || CompanyNationalId == "55555555555" ||
+                CompanyNationalId == "66666666666" || CompanyNationalId == "77777777777" ||
+                CompanyNationalId == "88888888888" || CompanyNationalId == "99999999999")
+            {
+                ErrorMessage = "شناسه ملی شرکت نامعتبر است";
+                return false;
+            }
+
+            // بررسی صفر نبودن 9 رقم سمت چپ
+            if (int.Parse(CompanyNationalId.Substring(0, 9)) == 0)
+            {
+                ErrorMessage = "شناسه ملی شرکت نامعتبر است";
+                return false;
+            }
+
+            // الگوریتم اعتبارسنجی شناسه ملی شرکت
+            int controlDigit = CompanyNationalId[10] - '0';
+            int d = (CompanyNationalId[9] - '0') + 2;
+            int[] coefficients = { 29, 27, 23, 19, 17 };
+            int sum = 0;
+
+            for (int i = 0; i < 10; i++)
+            {
+                sum += (d + (CompanyNationalId[i] - '0')) * coefficients[i % 5];
+            }
+
+            int remainder = sum % 11;
+            if (remainder == 10)
+                remainder = 0;
+
+            bool isValid = (controlDigit == remainder);
+            
+            ErrorMessage = isValid ? "" : "شناسه ملی شرکت نامعتبر است";
+            return isValid;
+        }
+    }
+
+    private void HandleKeyPress(KeyboardEventArgs e)
+    {
+        // اجازه ورود فقط اعداد و کلیدهای کنترلی
+        if (!char.IsDigit(e.Key[0]) && 
+            e.Key != "Backspace" && 
+            e.Key != "Delete" && 
+            e.Key != "Tab" && 
+            e.Key != "ArrowLeft" && 
+            e.Key != "ArrowRight")
+        {
+            return;
+        }
+    }
+} 

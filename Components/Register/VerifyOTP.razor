@@ -29,10 +29,13 @@
                     @for (int i = 0; i < 4; i++)
                     {
                         var index = i;
-                        <input type="text"
+                        <input type="number"
                                @ref="inputRefs[index]"
                                class="otp-input @(IsValid ? "" : "is-invalid")"
-                               maxlength="1"
+                               min="0"
+                               max="9"
+                               inputmode="numeric"
+                               pattern="[0-9]*"
                                value="@(OtpDigits.Length > index ? OtpDigits[index].ToString() : "")"
                                @oninput="(e) => OnOtpDigitChanged(e, index)"
                                @onkeydown="(e) => HandleKeyDown(e, index)" />
@@ -188,6 +191,13 @@
         border: 2px solid rgba(255, 255, 255, 0.5);
         border-radius: 0.75rem;
         transition: all 0.3s ease;
+        -moz-appearance: textfield;
+    }
+
+    .otp-input::-webkit-outer-spin-button,
+    .otp-input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
     }
 
     .otp-input:focus {
@@ -339,6 +349,7 @@
     private bool CanResend => RemainingSeconds <= 0;
     private System.Threading.Timer? ResendTimer;
     private ElementReference[] inputRefs = new ElementReference[4];
+    private bool isFirstRender = true;
 
     protected override void OnInitialized()
     {
@@ -395,20 +406,20 @@
         }
         else
         {
-            char digit = input.Last();
-            if (char.IsDigit(digit))
+            if (int.TryParse(input, out int number))
             {
                 if (OtpDigits.Length <= index)
                 {
-                    OtpDigits = OtpDigits.PadRight(index) + digit;
+                    OtpDigits = OtpDigits.PadRight(index) + number.ToString();
                 }
                 else
                 {
-                    OtpDigits = OtpDigits.Remove(index, 1).Insert(index, digit.ToString());
+                    OtpDigits = OtpDigits.Remove(index, 1).Insert(index, number.ToString());
                 }
                 
                 if (index < 3)
                 {
+                    await Task.Delay(10); // کمی تاخیر برای اطمینان از ثبت مقدار
                     await inputRefs[index + 1].FocusAsync();
                 }
                 else if (index == 3)
@@ -456,5 +467,14 @@
     public void Dispose()
     {
         ResendTimer?.Dispose();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await inputRefs[0].FocusAsync();
+            isFirstRender = false;
+        }
     }
 } 

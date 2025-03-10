@@ -1,0 +1,51 @@
+@using MudBlazor
+
+<style>
+    .waybill-auth-paper {
+        border-radius: 20px !important;
+        overflow: hidden !important;
+    }
+
+    .waybill-auth-paper ::deep .mud-paper {
+        border-radius: 20px !important;
+    }
+
+    ::deep .mud-paper {
+        border-radius: 20px !important;
+    }
+</style>
+
+@if (!ShowVerification)
+{
+    <MudPaper Elevation="0" Class="auth-requirement-container waybill-auth-paper">
+        <MudStack AlignItems="AlignItems.Center" Spacing="3" Class="relative">
+            <div class="background-icon">
+                <MudImage Src="/assets/images/sadi/3.png" Alt="background" Style="width:300px;height:300px;opacity:0.15" ObjectFit="ObjectFit.Cover" />
+            </div>
+            <div class="front-icon">
+                <lord-icon
+                    src="https://cdn.lordicon.com/nocovwne.json"
+                    trigger="loop"
+                    delay="2000"
+                    colors="primary:#2563eb,secondary:#2563eb"
+                    style="width:100px;height:100px">
+                </lord-icon>
+            </div>
+            <MudText Typo="Typo.h6" Color="Color.Primary" Class="text-center">برای ثبت بارنامه نیاز به احراز هویت دارید</MudText>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" Class="auth-button px-8 py-3 rounded-lg" OnClick="@(() => ShowVerification = true)">
+                <MudStack Row="true" Spacing="3" AlignItems="AlignItems.Center">
+                    <MudIcon Icon="@Icons.Material.Filled.Login" Size="Size.Large" />
+                    <MudText Class="text-lg font-medium">شروع احراز هویت</MudText>
+                </MudStack>
+            </MudButton>
+        </MudStack>
+    </MudPaper>
+}
+else
+{
+    <NationalIdVerification />
+}
+
+@code {
+    private bool ShowVerification { get; set; } = false;
+} 

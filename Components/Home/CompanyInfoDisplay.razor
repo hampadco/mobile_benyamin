@@ -1,0 +1,117 @@
+@using MudBlazor
+
+@if (!showVideoAuth)
+{
+    <MudPaper Elevation="0" Class="auth-requirement-container mt-4">
+        <MudStack AlignItems="AlignItems.Center" Spacing="3" Class="relative">
+            <div class="background-icon">
+                <MudImage Src="/assets/images/sadi/2.png" Alt="background" Style="width:300px;height:300px;opacity:0.15" ObjectFit="ObjectFit.Cover" />
+            </div>
+            <div class="front-icon">
+                <lord-icon
+                    src="https://cdn.lordicon.com/dxjqoygy.json"
+                    trigger="loop"
+                    delay="2000"
+                    colors="primary:#2563eb,secondary:#2563eb"
+                    style="width:80px;height:80px">
+                </lord-icon>
+            </div>
+            <MudText Typo="Typo.h6" Color="Color.Primary" Class="text-center">اطلاعات شرکت تایید شده</MudText>
+            
+            <MudPaper Elevation="0" Class="w-full max-w-sm">
+                <MudPaper Elevation="0" Class="pa-4 rounded-lg bg-surface">
+                    <MudStack Spacing="0">
+                        <MudStack Row="true" Class="py-2 px-2">
+                            <MudIcon Icon="@Icons.Material.Filled.Business" Size="Size.Small" Color="Color.Primary" />
+                            <MudText Typo="Typo.body1" Style="font-weight: 600;" Class="ml-2">نام شرکت:</MudText>
+                            <MudText Typo="Typo.body1" Style="font-weight: 600;" Class="mr-auto">شرکت حمل و نقل نمونه</MudText>
+                        </MudStack>
+                        
+                        <MudDivider />
+                        
+                        <MudStack Row="true" Class="py-2 px-2">
+                            <MudIcon Icon="@Icons.Material.Filled.Numbers" Size="Size.Small" Color="Color.Primary" />
+                            <MudText Typo="Typo.body1" Style="font-weight: 600;" Class="ml-2">شناسه ملی:</MudText>
+                            <MudText Typo="Typo.body1" Style="font-weight: 600;" Class="mr-auto">@CompanyNationalId</MudText>
+                        </MudStack>
+                        
+                        <MudDivider />
+                        
+                        <MudStack Row="true" Class="py-2 px-2">
+                            <MudIcon Icon="@Icons.Material.Filled.LocationOn" Size="Size.Small" Color="Color.Primary" />
+                            <MudText Typo="Typo.body1" Style="font-weight: 600;" Class="ml-2">آدرس:</MudText>
+                            <MudText Typo="Typo.body1" Style="font-weight: 600;" Class="mr-auto">تهران، خیابان آزادی</MudText>
+                        </MudStack>
+                        
+                        <MudDivider />
+                        
+                        <MudStack Row="true" Class="py-2 px-2">
+                            <MudIcon Icon="@Icons.Material.Filled.Phone" Size="Size.Small" Color="Color.Primary" />
+                            <MudText Typo="Typo.body1" Style="font-weight: 600;" Class="ml-2">تلفن:</MudText>
+                            <MudText Typo="Typo.body1" Style="font-weight: 600;" Class="mr-auto">021-12345678</MudText>
+                        </MudStack>
+                    </MudStack>
+                </MudPaper>
+                
+                <MudStack Row="true" Justify="Justify.SpaceBetween" Class="mt-4">
+                    <MudButton 
+                        Variant="Variant.Filled" 
+                        Color="Color.Error" 
+                        Size="Size.Large"
+                        OnClick="@(() => OnBack.InvokeAsync())"
+                        Class="py-3 rounded-lg"
+                        Style="width: 48%;">
+                        <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+                            <MudIcon Icon="@Icons.Material.Filled.ArrowForward" Size="Size.Medium" />
+                            <MudText Class="text-lg font-medium">برگشت</MudText>
+                        </MudStack>
+                    </MudButton>
+                    
+                    <MudButton 
+                        Variant="Variant.Filled" 
+                        Color="Color.Success" 
+                        Size="Size.Large"
+                        OnClick="HandleContinue"
+                        Class="py-3 rounded-lg"
+                        Style="width: 48%;">
+                        <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+                            <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Medium" />
+                            <MudText Class="text-lg font-medium">ادامه</MudText>
+                        </MudStack>
+                    </MudButton>
+                </MudStack>
+            </MudPaper>
+        </MudStack>
+    </MudPaper>
+}
+else
+{
+    <VideoAuthentication OnBack="HandleVideoAuthBack" OnComplete="HandleVideoAuthComplete" />
+}
+
+@code {
+    [Parameter]
+    public string CompanyNationalId { get; set; }
+    
+    [Parameter]
+    public EventCallback OnBack { get; set; }
+
+    private bool showVideoAuth = false;
+
+    private void HandleContinue()
+    {
+        showVideoAuth = true;
+    }
+
+    private void HandleVideoAuthBack()
+    {
+        showVideoAuth = false;
+    }
+
+    private void HandleVideoAuthComplete()
+    {
+        // اینجا می‌توانیم به مرحله بعد برویم
+        // مثلاً می‌توانیم یک EventCallback اضافه کنیم که به کامپوننت والد اطلاع بدهیم
+        // که احراز هویت ویدیویی با موفقیت انجام شده است
+    }
+} 

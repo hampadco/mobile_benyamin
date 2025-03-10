@@ -116,8 +116,8 @@
 
     private bool isRecording = false;
     private bool isPreviewMode = false;
-    private volatile int recordingTime = 30;
-    private Timer recordingTimer;
+    private volatile int recordingTime = 10;
+    private Timer? recordingTimer;
     private string[] verificationPhrases = new[] {
         "لطفاً جمله «من به درستی اطلاعات را تایید می‌کنم» را تکرار کنید",
         "لطفاً بگویید «من مسئولیت صحت اطلاعات را می‌پذیرم»",
@@ -197,7 +197,7 @@
             if (success)
             {
                 isRecording = true;
-                recordingTime = 30;
+                recordingTime = 10;
                 
                 recordingTimer?.Dispose();
                 recordingTimer = new Timer(1000);
@@ -217,7 +217,7 @@
         }
     }
 
-    private async void OnTimerElapsed(object sender, ElapsedEventArgs e)
+    private async void OnTimerElapsed(object? sender, ElapsedEventArgs e)
     {
         try
         {
@@ -254,7 +254,7 @@
             {
                 isRecording = false;
                 isPreviewMode = true;
-                recordingTime = 30;
+                recordingTime = 10;
                 StateHasChanged();
             }
         }
