@@ -1,0 +1,93 @@
+@using MudBlazor
+
+@if (!ShowCompanyVerification && !ShowVideoAuth)
+{
+    <MudPaper Elevation="0" Class="auth-requirement-container">
+        <MudStack AlignItems="AlignItems.Center" Spacing="3" Class="relative">
+            <div class="background-icon">
+                <MudImage Src="/assets/images/sadi/2.png" Alt="background" Style="width:400px;height:400px;opacity:0.15" ObjectFit="ObjectFit.Cover" />
+            </div>
+            <div class="front-icon">
+                <lord-icon
+                    src="https://cdn.lordicon.com/dxjqoygy.json"
+                    trigger="loop"
+                    delay="2000"
+                    colors="primary:#2563eb,secondary:#2563eb"
+                    style="width:100px;height:100px">
+                </lord-icon>
+            </div>
+            <MudText Typo="Typo.h6" Color="Color.Primary" Class="text-center">نوع صاحب بار را انتخاب کنید</MudText>
+            
+            <MudPaper Elevation="0" Class="w-full max-w-sm">
+                <MudStack Spacing="4">
+                    <MudButton 
+                        Variant="Variant.Filled" 
+                        Color="Color.Primary" 
+                        Size="Size.Large" 
+                        FullWidth="true"
+                        OnClick="@(() => HandleTypeSelection(true))"
+                        Class="py-4 rounded-lg">
+                        <MudStack Row="true" Spacing="3" AlignItems="AlignItems.Center">
+                            <MudIcon Icon="@Icons.Material.Filled.Business" Size="Size.Large" />
+                            <MudText Class="text-lg font-medium">شرکت هستم (حقوقی)</MudText>
+                        </MudStack>
+                    </MudButton>
+                    
+                    <MudButton 
+                        Variant="Variant.Filled" 
+                        Color="Color.Primary" 
+                        Size="Size.Large" 
+                        FullWidth="true"
+                        OnClick="@(() => HandleTypeSelection(false))"
+                        Class="py-4 rounded-lg">
+                        <MudStack Row="true" Spacing="3" AlignItems="AlignItems.Center">
+                            <MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Large" />
+                            <MudText Class="text-lg font-medium">شخص هستم (حقیقی)</MudText>
+                        </MudStack>
+                    </MudButton>
+
+                    <MudButton 
+                        Variant="Variant.Filled" 
+                        Color="Color.Error" 
+                        Size="Size.Large" 
+                        FullWidth="true"
+                        OnClick="@(() => OnBack.InvokeAsync())"
+                        Class="mt-2 py-3 rounded-lg">
+                        <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+                            <MudIcon Icon="@Icons.Material.Filled.ArrowForward" Size="Size.Medium" />
+                            <MudText Class="text-lg font-medium">برگشت</MudText>
+                        </MudStack>
+                    </MudButton>
+                </MudStack>
+            </MudPaper>
+        </MudStack>
+    </MudPaper>
+}
+else if (ShowCompanyVerification)
+{
+    <CompanyNationalIdVerification OnBack="@(() => ShowCompanyVerification = false)" />
+}
+else if (ShowVideoAuth)
+{
+    <VideoAuthentication OnBack="@(() => ShowVideoAuth = false)" />
+}
+
+@code {
+    [Parameter]
+    public EventCallback OnBack { get; set; }
+
+    private bool ShowCompanyVerification { get; set; } = false;
+    private bool ShowVideoAuth { get; set; } = false;
+
+    private void HandleTypeSelection(bool isCompany)
+    {
+        if (isCompany)
+        {
+            ShowCompanyVerification = true;
+        }
+        else
+        {
+            ShowVideoAuth = true;
+        }
+    }
+} 

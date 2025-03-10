@@ -1,0 +1,332 @@
+@using MudBlazor
+@using System.Timers
+@using Microsoft.JSInterop
+@using System.Threading.Tasks
+@using Microsoft.AspNetCore.Components
+@implements IAsyncDisposable
+@inject IJSRuntime JSRuntime
+@inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
+
+<link href="css/video-authentication.css" rel="stylesheet" />
+
+<MudPaper Elevation="0" Class="video-auth-container">
+    <MudStack AlignItems="AlignItems.Center" Spacing="3">
+        @if (!isPreviewMode)
+        {
+            <div class="camera-container">
+                <video id="video-preview" autoplay playsinline muted></video>
+                <div class="camera-overlay">
+                    @if (isRecording)
+                    {
+                        <div class="recording-indicator">
+                            <span class="recording-dot"></span>
+                            <MudText Color="Color.Surface">در حال ضبط: @recordingTime ثانیه</MudText>
+                        </div>
+                    }
+                    <div class="face-outline"></div>
+                    <MudText Class="verification-phrase">
+                        @verificationPhrases[currentPhraseIndex]
+                    </MudText>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="camera-container">
+                <video id="video-playback" controls></video>
+            </div>
+        }
+
+        <MudPaper Elevation="0" Class="w-full max-w-sm mt-4">
+            <MudStack Row="true" Justify="Justify.SpaceBetween">
+                <MudButton 
+                    Variant="Variant.Filled" 
+                    Color="Color.Error"
+                    OnClick="HandleBack"
+                    Class="flex-1 py-2 rounded-lg">
+                    <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+                        <MudIcon Icon="@Icons.Material.Filled.ArrowForward" Size="Size.Medium" />
+                        <MudText>برگشت</MudText>
+                    </MudStack>
+                </MudButton>
+                
+                @if (!isRecording && !isPreviewMode)
+                {
+                    <MudButton 
+                        Variant="Variant.Filled" 
+                        Color="Color.Primary"
+                        OnClick="StartRecording"
+                        Class="flex-1 py-2 rounded-lg">
+                        <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+                            <MudIcon Icon="@Icons.Material.Filled.Videocam" Size="Size.Medium" />
+                            <MudText>شروع ضبط</MudText>
+                        </MudStack>
+                    </MudButton>
+                }
+                else if (isPreviewMode)
+                {
+                    <MudButton 
+                        Variant="Variant.Filled" 
+                        Color="Color.Warning"
+                        OnClick="RetryRecording"
+                        Class="flex-1 py-2 rounded-lg mx-2">
+                        <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+                            <MudIcon Icon="@Icons.Material.Filled.Refresh" Size="Size.Medium" />
+                            <MudText>ضبط مجدد</MudText>
+                        </MudStack>
+                    </MudButton>
+                    
+                    <MudButton 
+                        Variant="Variant.Filled" 
+                        Color="Color.Success"
+                        OnClick="ConfirmRecording"
+                        Class="flex-1 py-2 rounded-lg">
+                        <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+                            <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Medium" />
+                            <MudText>تایید</MudText>
+                        </MudStack>
+                    </MudButton>
+                }
+            </MudStack>
+        </MudPaper>
+    </MudStack>
+</MudPaper>
+
+<MudDialog @bind-IsVisible="showSuccessDialog" Options="dialogOptions" DisableSidePadding="false">
+    <DialogContent>
+        <MudContainer Style="padding: 24px 32px;" Class="d-flex flex-column align-center">
+            <div class="success-animation">
+                <div class="checkmark-circle">
+                    <div class="checkmark draw"></div>
+                </div>
+            </div>
+            <MudText Typo="Typo.h5" Align="Align.Center" Style="margin: 16px 0;">ثبت نام با موفقیت انجام شد</MudText>
+            <MudText Typo="Typo.body1" Align="Align.Center">درخواست شما با موفقیت ثبت شد و در انتظار تایید مدیریت می‌باشد.</MudText>
+        </MudContainer>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [Parameter]
+    public EventCallback OnBack { get; set; }
+
+    [Parameter]
+    public EventCallback OnComplete { get; set; }
+
+    private bool isRecording = false;
+    private bool isPreviewMode = false;
+    private volatile int recordingTime = 30;
+    private Timer recordingTimer;
+    private string[] verificationPhrases = new[] {
+        "لطفاً جمله «من به درستی اطلاعات را تایید می‌کنم» را تکرار کنید",
+        "لطفاً بگویید «من مسئولیت صحت اطلاعات را می‌پذیرم»",
+        "لطفاً عبارت «این ویدیو در تاریخ امروز ضبط شده است» را بیان کنید",
+        "لطفاً بگویید «من تایید می‌کنم که خودم این فرم را پر کرده‌ام»"
+    };
+    private int currentPhraseIndex = 0;
+    private bool disposedValue;
+    private bool showSuccessDialog = false;
+    private DialogOptions dialogOptions = new DialogOptions() 
+    { 
+        CloseOnEscapeKey = false,
+        DisableBackdropClick = true,
+        Position = DialogPosition.Center,
+        MaxWidth = MaxWidth.Small,
+        FullWidth = true,
+        NoHeader = true
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Random rnd = new Random();
+            currentPhraseIndex = rnd.Next(verificationPhrases.Length);
+
+            var success = await JSRuntime.InvokeAsync<bool>("videoAuthModule.initializeCamera");
+            if (!success)
+            {
+                Snackbar.Add("لطفاً مطمئن شوید که:", Severity.Warning, config =>
+                {
+                    config.VisibleStateDuration = 10000;
+                });
+                Snackbar.Add("۱. دوربین به سیستم متصل است", Severity.Info, config =>
+                {
+                    config.VisibleStateDuration = 10000;
+                });
+                Snackbar.Add("۲. اجازه دسترسی به دوربین را در مرورگر داده‌اید", Severity.Info, config =>
+                {
+                    config.VisibleStateDuration = 10000;
+                });
+                Snackbar.Add("۳. دوربین توسط برنامه دیگری در حال استفاده نیست", Severity.Info, config =>
+                {
+                    config.VisibleStateDuration = 10000;
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in OnInitializedAsync: {ex.Message}");
+            Snackbar.Add("خطا در دسترسی به دوربین", Severity.Error);
+        }
+    }
+
+    private async Task HandleBack()
+    {
+        try
+        {
+            if (isRecording)
+            {
+                await StopRecording();
+            }
+            await JSRuntime.InvokeAsync<bool>("videoAuthModule.cleanupCamera");
+            await OnBack.InvokeAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in HandleBack: {ex.Message}");
+        }
+    }
+
+    private async Task StartRecording()
+    {
+        try
+        {
+            var success = await JSRuntime.InvokeAsync<bool>("videoAuthModule.startVideoRecording");
+            if (success)
+            {
+                isRecording = true;
+                recordingTime = 30;
+                
+                recordingTimer?.Dispose();
+                recordingTimer = new Timer(1000);
+                recordingTimer.AutoReset = true;
+                recordingTimer.Elapsed += OnTimerElapsed;
+                recordingTimer.Start();
+            }
+            else
+            {
+                Snackbar.Add("خطا در شروع ضبط ویدیو", Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error starting recording: {ex.Message}");
+            Snackbar.Add("خطا در شروع ضبط ویدیو", Severity.Error);
+        }
+    }
+
+    private async void OnTimerElapsed(object sender, ElapsedEventArgs e)
+    {
+        try
+        {
+            await InvokeAsync(() =>
+            {
+                recordingTime--;
+                if (recordingTime <= 0)
+                {
+                    _ = StopRecording();
+                }
+                StateHasChanged();
+                return Task.CompletedTask;
+            });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in timer callback: {ex.Message}");
+        }
+    }
+
+    private async Task StopRecording()
+    {
+        try
+        {
+            if (recordingTimer != null)
+            {
+                recordingTimer.Stop();
+                recordingTimer.Elapsed -= OnTimerElapsed;
+                recordingTimer.Dispose();
+            }
+
+            var success = await JSRuntime.InvokeAsync<bool>("videoAuthModule.stopVideoRecording");
+            if (success)
+            {
+                isRecording = false;
+                isPreviewMode = true;
+                recordingTime = 30;
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error stopping recording: {ex.Message}");
+        }
+    }
+
+    private async Task RetryRecording()
+    {
+        try
+        {
+            isPreviewMode = false;
+            StateHasChanged();
+
+            var success = await JSRuntime.InvokeAsync<bool>("videoAuthModule.initializeCamera");
+            if (success)
+            {
+                await StartRecording();
+            }
+            else
+            {
+                Snackbar.Add("خطا در دسترسی به دوربین", Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in RetryRecording: {ex.Message}");
+            Snackbar.Add("خطا در شروع مجدد ضبط", Severity.Error);
+        }
+    }
+
+    private async Task ConfirmRecording()
+    {
+        try
+        {
+            showSuccessDialog = true;
+            StateHasChanged();
+            
+            // Wait for 3 seconds before redirecting
+            await Task.Delay(3000);
+            
+            // Navigate to index page
+            NavigationManager.NavigateTo("/index", true);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in ConfirmRecording: {ex.Message}");
+        }
+    }
+
+    async ValueTask IAsyncDisposable.DisposeAsync()
+    {
+        try
+        {
+            if (!disposedValue)
+            {
+                if (recordingTimer != null)
+                {
+                    recordingTimer.Stop();
+                    recordingTimer.Elapsed -= OnTimerElapsed;
+                    recordingTimer.Dispose();
+                }
+
+                await JSRuntime.InvokeAsync<bool>("videoAuthModule.cleanupCamera");
+                disposedValue = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in DisposeAsync: {ex.Message}");
+        }
+    }
+} 
