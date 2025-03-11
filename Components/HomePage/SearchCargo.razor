@@ -1,5 +1,6 @@
 @using MudBlazor
 @using mobile_benyamin.Models
+@inject IDialogService DialogService
 
 <MudPaper Elevation="0" Class="auth-requirement-container waybill-auth-paper mt-7 shadow-lg hover:shadow-xl transition-shadow duration-300" style="margin: 3px;padding-bottom:100pxpx;border-radius: 25px;">
     <MudStack Spacing="3">
@@ -21,13 +22,13 @@
             <div class="animationOne content" id="flight">
                 <MudStack Spacing="2">
                     <MudPaper Elevation="0" Class="w-full">
-                        <MudButton Variant="Variant.Outlined" FullWidth="true" Class="py-2.5 px-3" OnClick="OpenOriginModal">
+                        <MudButton Variant="Variant.Outlined" FullWidth="true" Class="py-2.5 px-3" OnClick="() => OpenCityDialog(true)">
                             <MudText Class="text-n400 text-sm md:text-base">@(string.IsNullOrEmpty(searchRequest.Origin) ? "انتخاب مبدا" : searchRequest.Origin)</MudText>
                         </MudButton>
                     </MudPaper>
 
                     <MudPaper Elevation="0" Class="w-full">
-                        <MudButton Variant="Variant.Outlined" FullWidth="true" Class="py-2.5 px-3" OnClick="OpenDestinationModal">
+                        <MudButton Variant="Variant.Outlined" FullWidth="true" Class="py-2.5 px-3" OnClick="() => OpenCityDialog(false)">
                             <MudText Class="text-n400 text-sm md:text-base">@(string.IsNullOrEmpty(searchRequest.Destination) ? "انتخاب مقصد" : searchRequest.Destination)</MudText>
                         </MudButton>
                     </MudPaper>
@@ -86,11 +87,38 @@
                           !string.IsNullOrEmpty(searchRequest.Destination) && 
                           !string.IsNullOrEmpty(searchRequest.Date);
 
+    private DialogOptions dialogOptions = new()
+    {
+        CloseOnEscapeKey = true,
+        FullWidth = true,
+        NoHeader = true,
+        DisableBackdropClick = false
+    };
+
+    private async Task OpenCityDialog(bool isOrigin)
+    {
+        var parameters = new DialogParameters
+        {
+            { "IsOrigin", isOrigin }
+        };
+
+        var dialog = await DialogService.ShowAsync<CitySelectionDialog>("", parameters, dialogOptions);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            var cityResult = (dynamic)result.Data;
+            if ((bool)cityResult.IsOrigin)
+                searchRequest.Origin = cityResult.City.Name;
+            else
+                searchRequest.Destination = cityResult.City.Name;
+            StateHasChanged();
+        }
+    }
+
     private void OpenDateModal() => isDateModalOpen = true;
     private void OpenVehicleModal() => isVehicleModalOpen = true;
     private void OpenCargoTypeModal() => isCargoTypeModalOpen = true;
-    private void OpenOriginModal() => Console.WriteLine("Open Origin Modal"); // TODO: Implement
-    private void OpenDestinationModal() => Console.WriteLine("Open Destination Modal"); // TODO: Implement
 
     private void HandleDateSelected(string date)
     {

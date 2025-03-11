@@ -1,0 +1,126 @@
+@using MudBlazor
+
+<link href="css/components/HomePage/CitySelectionDialog.css" rel="stylesheet" />
+
+<MudDialog Class="search-cargo-dialog">
+    <DialogContent>
+        <div class="search-cargo-container">
+            <div class="search-header">
+                <div class="header-info">
+                    <MudText Typo="Typo.h6" Class="text-lg md:text-xl">@(IsOrigin ? "انتخاب مبدا" : "انتخاب مقصد")</MudText>
+                </div>
+                <MudIconButton Icon="@Icons.Material.Filled.Close" OnClick="CloseDialog" />
+            </div>
+
+            <div class="search-content">
+                <div class="search-box-container">
+                    <MudPaper Elevation="0" Class="search-box">
+                        <MudTextField Value="@searchText"
+                                    ValueChanged="@((string value) => OnSearchInput(value))"
+                                    Immediate="true"
+                                    Placeholder="جستجوی شهر"
+                                    Adornment="Adornment.Start"
+                                    AdornmentIcon="@Icons.Material.Filled.Search"
+                                    Class="mt-0" />
+                    </MudPaper>
+
+                    <MudText Typo="Typo.h6" Class="pt-7">انتخاب شهر</MudText>
+                </div>
+
+                <div class="cities-container">
+                    <MudStack Spacing="2">
+                        @if (!filteredCities.Any())
+                        {
+                            <MudText Color="Color.Default" Class="text-center py-4">موردی یافت نشد</MudText>
+                        }
+                        else
+                        {
+                            @foreach (var city in filteredCities)
+                            {
+                                <MudPaper Elevation="0" Class="city-item" @onclick="() => SelectCity(city)">
+                                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                                        <MudIcon Icon="@Icons.Material.Filled.LocationOn" Color="Color.Primary" />
+                                        <MudStack>
+                                            <MudText Typo="Typo.body1">@city.Name</MudText>
+                                            <MudText Typo="Typo.body2" Color="Color.Default">@city.Description</MudText>
+                                        </MudStack>
+                                        <MudIcon Icon="@Icons.Material.Filled.ChevronLeft" Class="ms-auto" />
+                                    </MudStack>
+                                </MudPaper>
+                            }
+                        }
+                    </MudStack>
+                </div>
+            </div>
+        </div>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter] 
+    MudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public bool IsOrigin { get; set; }
+
+    private string searchText = "";
+    private string normalizedSearchText = "";
+    private List<City> cities = new()
+    {
+        new City { Name = "تهران", Description = "فرودگاه بین‌المللی امام خمینی (ره)" },
+        new City { Name = "مشهد", Description = "فرودگاه بین‌المللی شهید هاشمی‌نژاد" },
+        new City { Name = "اصفهان", Description = "فرودگاه بین‌المللی شهید بهشتی" },
+        new City { Name = "شیراز", Description = "فرودگاه بین‌المللی شهید دستغیب" },
+        new City { Name = "تبریز", Description = "فرودگاه بین‌المللی شهید مدنی" },
+        new City { Name = "کیش", Description = "فرودگاه بین‌المللی کیش" },
+        new City { Name = "قشم", Description = "فرودگاه بین‌المللی قشم" },
+        new City { Name = "اهواز", Description = "فرودگاه بین‌المللی شهید بهشتی" },
+        new City { Name = "بندرعباس", Description = "فرودگاه بین‌المللی بندرعباس" }
+    };
+
+    private IEnumerable<City> filteredCities => 
+        string.IsNullOrEmpty(normalizedSearchText) 
+            ? cities 
+            : cities.Where(c => 
+                NormalizeText(c.Name).Contains(normalizedSearchText, StringComparison.OrdinalIgnoreCase) || 
+                NormalizeText(c.Description).Contains(normalizedSearchText, StringComparison.OrdinalIgnoreCase));
+
+    private void CloseDialog()
+    {
+        MudDialog?.Cancel();
+    }
+
+    private void SelectCity(City city)
+    {
+        MudDialog?.Close(DialogResult.Ok(new { IsOrigin, City = city }));
+    }
+
+    private void OnSearchInput(string value)
+    {
+        searchText = value;
+        normalizedSearchText = NormalizeText(searchText);
+        StateHasChanged();
+    }
+
+    private string NormalizeText(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+            return "";
+            
+        // Convert Persian/Arabic numbers to English
+        var normalized = input
+            .Replace("۰", "0").Replace("۱", "1").Replace("۲", "2").Replace("۳", "3")
+            .Replace("۴", "4").Replace("۵", "5").Replace("۶", "6").Replace("۷", "7")
+            .Replace("۸", "8").Replace("۹", "9")
+            // Normalize Persian characters
+            .Replace("ي", "ی").Replace("ك", "ک");
+            
+        return normalized.Trim();
+    }
+
+    public class City
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
+} 
