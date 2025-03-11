@@ -1,0 +1,116 @@
+@page "/support-chat"
+@using Microsoft.JSInterop
+@inject IJSRuntime JS
+
+<PageTitle>پشتیبانی</PageTitle>
+
+<link href="css/components/Support/support-chat.css" rel="stylesheet" />
+<script src="js/chat.js"></script>
+
+<div class="support-chat-container">
+    <div class="chat-header">
+        <div class="header-info">
+            <i class="ph ph-headset"></i>
+            <h2>پشتیبانی</h2>
+        </div>
+        <button class="close-btn" @onclick="CloseChat">
+            <i class="ph ph-x"></i>
+        </button>
+    </div>
+
+    <div class="chat-messages" @ref="messagesDiv">
+        @foreach (var message in messages)
+        {
+            <div class="message @(message.IsUser ? "user-message" : "support-message")">
+                <div class="message-content">
+                    <p>@message.Content</p>
+                    <span class="message-time">@message.Time.ToString("HH:mm")</span>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="chat-input">
+        <input type="text" 
+               @bind="newMessage" 
+               @bind:event="oninput"
+               @onkeypress="HandleKeyPress"
+               placeholder="پیام خود را بنویسید..." />
+        <button class="send-btn" @onclick="SendMessage" disabled="@string.IsNullOrWhiteSpace(newMessage)">
+            <i class="ph ph-paper-plane-right"></i>
+        </button>
+    </div>
+</div>
+
+@code {
+    private List<ChatMessage> messages = new List<ChatMessage>();
+    private string newMessage = "";
+    private ElementReference messagesDiv;
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Add welcome message
+        messages.Add(new ChatMessage
+        {
+            Content = "سلام، به پشتیبانی خوش آمدید. چطور میتونم کمکتون کنم؟",
+            IsUser = false,
+            Time = DateTime.Now
+        });
+    }
+
+    private async Task SendMessage()
+    {
+        if (!string.IsNullOrWhiteSpace(newMessage))
+        {
+            messages.Add(new ChatMessage
+            {
+                Content = newMessage,
+                IsUser = true,
+                Time = DateTime.Now
+            });
+
+            string userMessage = newMessage;
+            newMessage = "";
+
+            // Simulate support response
+            await Task.Delay(1000);
+            messages.Add(new ChatMessage
+            {
+                Content = "پیام شما دریافت شد. همکاران ما در اسرع وقت پاسخگو خواهند بود.",
+                IsUser = false,
+                Time = DateTime.Now
+            });
+
+            StateHasChanged();
+            await ScrollToBottom();
+        }
+    }
+
+    private async Task HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await SendMessage();
+        }
+    }
+
+    private async Task ScrollToBottom()
+    {
+        await JS.InvokeVoidAsync("scrollToBottom", messagesDiv);
+    }
+
+    private async Task CloseChat()
+    {
+        await OnClose.InvokeAsync();
+    }
+
+    public class ChatMessage
+    {
+        public string Content { get; set; }
+        public bool IsUser { get; set; }
+        public DateTime Time { get; set; }
+    }
+} 

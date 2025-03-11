@@ -1,0 +1,148 @@
+@using Microsoft.JSInterop
+@inject IJSRuntime JS
+
+<link href="css/components/Support/support-chat.css" rel="stylesheet" />
+<script src="js/chat.js"></script>
+
+<MudDialog Class="support-chat-dialog">
+    <DialogContent>
+        <div class="support-chat-container">
+            <div class="chat-header">
+                <div class="header-info">
+                    <i class="ph ph-headset"></i>
+                    <h2>پشتیبانی</h2>
+                </div>
+                <button class="close-btn" @onclick="Cancel">
+                    <i class="ph ph-x"></i>
+                </button>
+            </div>
+
+            <div class="chat-messages" @ref="messagesDiv">
+                @foreach (var message in messages)
+                {
+                    <div class="message @(message.IsUser ? "user-message" : "support-message")">
+                        <div class="message-content">
+                            <p>@message.Content</p>
+                            @if (!string.IsNullOrEmpty(message.FileName))
+                            {
+                                <p class="file-message">
+                                    <i class="ph ph-file-text"></i>
+                                    @message.FileName
+                                </p>
+                            }
+                            <span class="message-time">@message.Time.ToString("HH:mm")</span>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="chat-input">
+                <input type="text" 
+                       @bind="newMessage" 
+                       @bind:event="oninput"
+                       @onkeypress="HandleKeyPress"
+                       placeholder="پیام خود را بنویسید..." />
+                <div class="chat-input-actions">
+                    <label class="upload-btn">
+                        <InputFile OnChange="@HandleFileSelected" />
+                        <i class="ph ph-paperclip"></i>
+                    </label>
+                    <button class="send-btn" @onclick="SendMessage" disabled="@string.IsNullOrWhiteSpace(newMessage)">
+                        <i class="ph ph-arrow-left"></i>
+                    </button>
+              </div>
+            </div>
+        </div>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter] 
+    MudDialogInstance MudDialog { get; set; }
+
+    private List<ChatMessage> messages = new List<ChatMessage>();
+    private string newMessage = "";
+    private ElementReference messagesDiv;
+    private ElementReference fileInput;
+    private IBrowserFile selectedFile;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Add welcome message
+        messages.Add(new ChatMessage
+        {
+            Content = "سلام، به پشتیبانی خوش آمدید. چطور میتونم کمکتون کنم؟",
+            IsUser = false,
+            Time = DateTime.Now
+        });
+    }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        selectedFile = e.File;
+        if (selectedFile != null)
+        {
+            messages.Add(new ChatMessage
+            {
+                Content = "فایل پیوست شد:",
+                FileName = selectedFile.Name,
+                IsUser = true,
+                Time = DateTime.Now
+            });
+
+            StateHasChanged();
+            await ScrollToBottom();
+        }
+    }
+
+    private async Task SendMessage()
+    {
+        if (!string.IsNullOrWhiteSpace(newMessage))
+        {
+            messages.Add(new ChatMessage
+            {
+                Content = newMessage,
+                IsUser = true,
+                Time = DateTime.Now
+            });
+
+            string userMessage = newMessage;
+            newMessage = "";
+
+            // Simulate support response
+            await Task.Delay(1000);
+            messages.Add(new ChatMessage
+            {
+                Content = "پیام شما دریافت شد. همکاران ما در اسرع وقت پاسخگو خواهند بود.",
+                IsUser = false,
+                Time = DateTime.Now
+            });
+
+            StateHasChanged();
+            await ScrollToBottom();
+        }
+    }
+
+    private async Task HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await SendMessage();
+        }
+    }
+
+    private async Task ScrollToBottom()
+    {
+        await JS.InvokeVoidAsync("scrollToBottom", messagesDiv);
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    public class ChatMessage
+    {
+        public string Content { get; set; }
+        public string FileName { get; set; }
+        public bool IsUser { get; set; }
+        public DateTime Time { get; set; }
+    }
+} 

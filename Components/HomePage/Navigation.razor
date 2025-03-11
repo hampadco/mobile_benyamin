@@ -1,12 +1,13 @@
 @using MudBlazor
+@using mobilebenyamin.Components.Support
 
 <link href="css/components/HomePage/Navigation.css" rel="stylesheet" />
 
 <div class="navigation-container">
     <div class="navigation-wrapper">
         <div class="navigation-inner">
-            <MudLink Href="/index">
-                <div class="navigation-menu-bg">
+            <div  style="cursor: pointer;">
+                <div class="navigation-menu-bg" @onclick="OpenChatDialog">
                     <MudImage Src="assets/images/menu-bg.png" Alt="" Class="navigation-menu-bg-image" />
                     <div class="navigation-menu-icon">
                         <MudIcon Icon="@Icons.Material.Filled.Chat" Size="Size.Medium" Class="!text-lg" />
@@ -16,13 +17,13 @@
                     <MudIcon Icon="@Icons.Material.Filled.Home" Size="Size.Medium" Class="text-white" />
                     <span class="navigation-dot"></span>
                 </div>
-            </MudLink>
+            </div>
             <MudLink Href="/index" Class="text-2xl">
                 <MudIcon Icon="@Icons.Material.Filled.Bookmark" Size="Size.Medium" Class="text-white" />
             </MudLink>
-            <MudLink Href="/index" Class="navigation-support"> 
+            <div @onclick="OpenChatDialog" class="navigation-support" style="cursor: pointer;"> 
                 <MudText Class="text-white">پشتیبانی</MudText>
-            </MudLink>
+            </div>
             <MudLink Href="/index" Class="text-2xl">
                 <MudIcon Icon="@Icons.Material.Filled.Wallet" Size="Size.Medium" Class="text-white" />
             </MudLink>
@@ -34,5 +35,23 @@
 </div>
 
 @code {
-    
+    [Inject]
+    private IDialogService DialogService { get; set; }
+
+    private async Task OpenChatDialog()
+    {
+        var parameters = new DialogParameters();
+        var options = new DialogOptions 
+        { 
+            CloseOnEscapeKey = true,
+            Position = DialogPosition.Center,
+            FullWidth = true,
+            CloseButton = false,
+            NoHeader = true,
+            DisableBackdropClick = false,
+            MaxWidth = MaxWidth.ExtraLarge
+        };
+        
+        var dialog = await DialogService.ShowAsync<SupportChatDialog>("", parameters, options);
+    }
 } 
