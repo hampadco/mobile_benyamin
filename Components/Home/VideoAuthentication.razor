@@ -38,21 +38,9 @@
             </div>
         }
 
-           <MudPaper Elevation="0" Class="auth-requirement-container waybill-auth-paper mt-7 shadow-lg hover:shadow-xl transition-shadow duration-300" style="margin: 3px;padding-bottom:100pxpx;border-radius: 25px;">
 
             <MudStack Row="true" Justify="Justify.SpaceBetween" Class="button-container">
-                <MudButton 
-                    Variant="Variant.Filled" 
-                    Color="Color.Error"
-                    OnClick="HandleBack"
-                    Class="action-button">
-                    <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
-                        <MudIcon Icon="@Icons.Material.Filled.ArrowForward" Size="Size.Small" />
-                        <MudText>برگشت</MudText>
-                    </MudStack>
-                </MudButton>
-                
-                @if (!isRecording && !isPreviewMode)
+                 @if (!isRecording && !isPreviewMode)
                 {
                     <MudButton 
                         Variant="Variant.Filled" 
@@ -65,18 +53,8 @@
                         </MudStack>
                     </MudButton>
                 }
-                else if (isPreviewMode)
+              @if (isPreviewMode)
                 {
-                    <MudButton 
-                        Variant="Variant.Filled" 
-                        Color="Color.Warning"
-                        OnClick="RetryRecording"
-                        Class="action-button">
-                        <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
-                            <MudIcon Icon="@Icons.Material.Filled.Refresh" Size="Size.Small" />
-                            <MudText>ضبط مجدد</MudText>
-                        </MudStack>
-                    </MudButton>
                     
                     <MudButton 
                         Variant="Variant.Filled" 
@@ -88,9 +66,43 @@
                             <MudText>تایید</MudText>
                         </MudStack>
                     </MudButton>
+                    <MudButton 
+                        Variant="Variant.Filled" 
+                        Color="Color.Warning"
+                        OnClick="RetryRecording"
+                        Class="action-button">
+                        <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+                            <MudIcon Icon="@Icons.Material.Filled.Refresh" Size="Size.Small" />
+                            <MudText>ضبط مجدد</MudText>
+                        </MudStack>
+                    </MudButton>
+                    
                 }
+                else if (!isRecording)
+                {
+                    <MudButton 
+                        Variant="Variant.Filled" 
+                        Color="Color.Error"
+                        OnClick="HandleBack"
+                        Class="action-button">
+                        <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+                            <MudIcon Icon="@Icons.Material.Filled.ArrowForward" Size="Size.Small" />
+                            <MudText>برگشت</MudText>
+                        </MudStack>
+                    </MudButton>
+                }
+                else
+                {
+                    <MudText Color="Color.Error" Class="recording-message">
+                        <MudIcon Icon="@Icons.Material.Filled.Videocam" Size="Size.Small" />
+                        در حال ضبط ویدیو...
+                    </MudText>
+                }
+                
+               
+               
             </MudStack>
-        </MudPaper>
+        
     </MudStack>
 </MudPaper>
 
