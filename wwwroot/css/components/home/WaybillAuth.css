@@ -1,0 +1,12 @@
+.waybill-auth-paper {
+    border-radius: 20px !important;
+    overflow: hidden !important;
+}
+
+.waybill-auth-paper ::deep .mud-paper {
+    border-radius: 20px !important;
+}
+
+::deep .mud-paper {
+    border-radius: 20px !important;
+} 

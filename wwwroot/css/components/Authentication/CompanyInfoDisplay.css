@@ -1,0 +1,61 @@
+.company-info-container {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.company-info-container ::deep .mud-paper {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.company-info-container ::deep .mud-text {
+    text-align: right !important;
+}
+
+.company-info-container ::deep .mud-grid {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.company-info-container ::deep .mud-item {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.background-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+}
+
+.front-icon {
+    position: relative;
+    z-index: 1;
+}
+
+.background-image {
+    width: 300px;
+    height: 300px;
+    opacity: 0.15;
+}
+
+.lord-icon {
+    width: 80px;
+    height: 80px;
+}
+
+.info-text {
+    font-weight: 600;
+}
+
+.button-width {
+    width: 48%;
+}
+
+.auth-requirement-container {
+    margin: 3px;
+    padding-bottom: 100px;
+    border-radius: 25px;
+} 

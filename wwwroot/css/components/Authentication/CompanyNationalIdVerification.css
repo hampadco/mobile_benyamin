@@ -1,0 +1,33 @@
+.national-id-field {
+    background-color: transparent !important;
+}
+
+.national-id-field ::deep .mud-input {
+    text-align: left !important;
+    direction: ltr !important;
+}
+
+.national-id-field ::deep .mud-input-label {
+    text-align: right !important;
+    right: 0 !important;
+    left: auto !important;
+    background-color: transparent !important;
+}
+
+.national-id-field ::deep .mud-input-adornment-end {
+    margin-left: 0 !important;
+    margin-right: auto !important;
+}
+
+.background-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+}
+
+.front-icon {
+    position: relative;
+    z-index: 1;
+} 
