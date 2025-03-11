@@ -1,0 +1,120 @@
+@using MudBlazor
+@using mobile_benyamin.Models
+
+<MudPaper Elevation="0" Class="auth-requirement-container waybill-auth-paper mt-7 shadow-lg hover:shadow-xl transition-shadow duration-300" style="margin: 3px;padding-bottom:100pxpx;border-radius: 25px;">
+    <MudStack Spacing="3">
+        <MudStack AlignItems="AlignItems.Center" Class="pb-3 border-b border-dashed border-n100 dark:border-n70">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                    <MudText Typo="Typo.h6" Color="Color.Primary" Class="text-lg md:text-xl">جستجوی بارها</MudText>
+                    <lord-icon
+                        src="https://cdn.lordicon.com/msoeawqm.json"
+                        trigger="hover"
+                        colors="primary:#2563eb"
+                        style="width:24px;height:24px">
+                    </lord-icon>
+                </MudStack>
+            </MudStack>
+        </MudStack>
+
+        <MudStack Class="pt-2" Spacing="2">
+            <div class="animationOne content" id="flight">
+                <MudStack Spacing="2">
+                    <MudPaper Elevation="0" Class="w-full">
+                        <MudButton Variant="Variant.Outlined" FullWidth="true" Class="py-2.5 px-3" OnClick="OpenOriginModal">
+                            <MudText Class="text-n400 text-sm md:text-base">@(string.IsNullOrEmpty(searchRequest.Origin) ? "انتخاب مبدا" : searchRequest.Origin)</MudText>
+                        </MudButton>
+                    </MudPaper>
+
+                    <MudPaper Elevation="0" Class="w-full">
+                        <MudButton Variant="Variant.Outlined" FullWidth="true" Class="py-2.5 px-3" OnClick="OpenDestinationModal">
+                            <MudText Class="text-n400 text-sm md:text-base">@(string.IsNullOrEmpty(searchRequest.Destination) ? "انتخاب مقصد" : searchRequest.Destination)</MudText>
+                        </MudButton>
+                    </MudPaper>
+
+                    <MudPaper Elevation="0" Class="w-full">
+                        <MudText Class="pb-1 text-sm md:text-base" Typo="Typo.subtitle2">تاریخ حمل</MudText>
+                        <MudButton Variant="Variant.Outlined" FullWidth="true" OnClick="OpenDateModal" Class="py-2.5 px-3">
+                            <MudText Class="text-n500 text-base md:text-xl lg:text-2xl">@(string.IsNullOrEmpty(searchRequest.Date) ? "انتخاب تاریخ" : searchRequest.Date)</MudText>
+                        </MudButton>
+                    </MudPaper>
+
+                    <MudGrid Spacing="2">
+                        <MudItem xs="6">
+                            <MudText Class="pb-1 text-sm md:text-base" Typo="Typo.subtitle2">نوع خودرو</MudText>
+                            <MudButton Variant="Variant.Outlined" FullWidth="true" OnClick="OpenVehicleModal" Class="py-2.5 px-3">
+                                <MudText Class="text-n400 text-sm md:text-base">@(string.IsNullOrEmpty(searchRequest.VehicleType) ? "نوع خودرو" : searchRequest.VehicleType)</MudText>
+                            </MudButton>
+                        </MudItem>
+
+                        <MudItem xs="6">
+                            <MudText Class="pb-1 text-sm md:text-base" Typo="Typo.subtitle2">نوع بار</MudText>
+                            <MudButton Variant="Variant.Outlined" FullWidth="true" OnClick="OpenCargoTypeModal" Class="py-2.5 px-3">
+                                <MudText Class="text-n400 text-sm md:text-base">@(string.IsNullOrEmpty(searchRequest.CargoType) ? "نوع بار" : searchRequest.CargoType)</MudText>
+                            </MudButton>
+                        </MudItem>
+                    </MudGrid>
+
+                    <MudButton Variant="Variant.Filled" 
+                              Color="Color.Primary" 
+                              FullWidth="true" 
+                              OnClick="HandleSearch" 
+                              Class="py-3 mt-1"
+                              Disabled="@(!IsValid)">
+                        <MudText Class="text-base md:text-lg font-medium">جستجوی بار</MudText>
+                    </MudButton>
+                </MudStack>
+            </div>
+        </MudStack>
+    </MudStack>
+</MudPaper>
+
+<DateModal @bind-IsOpen="isDateModalOpen" OnDateSelected="HandleDateSelected" />
+<VehicleModal @bind-IsOpen="isVehicleModalOpen" OnVehicleSelected="HandleVehicleSelected" />
+<CargoTypeModal @bind-IsOpen="isCargoTypeModalOpen" OnCargoTypeSelected="HandleCargoTypeSelected" />
+
+@code {
+    [Parameter]
+    public EventCallback<SearchCargoRequest> OnSearchRequested { get; set; }
+
+    private SearchCargoRequest searchRequest = new();
+    private bool isDateModalOpen;
+    private bool isVehicleModalOpen;
+    private bool isCargoTypeModalOpen;
+
+    private bool IsValid => !string.IsNullOrEmpty(searchRequest.Origin) && 
+                          !string.IsNullOrEmpty(searchRequest.Destination) && 
+                          !string.IsNullOrEmpty(searchRequest.Date);
+
+    private void OpenDateModal() => isDateModalOpen = true;
+    private void OpenVehicleModal() => isVehicleModalOpen = true;
+    private void OpenCargoTypeModal() => isCargoTypeModalOpen = true;
+    private void OpenOriginModal() => Console.WriteLine("Open Origin Modal"); // TODO: Implement
+    private void OpenDestinationModal() => Console.WriteLine("Open Destination Modal"); // TODO: Implement
+
+    private void HandleDateSelected(string date)
+    {
+        searchRequest.Date = date;
+        StateHasChanged();
+    }
+
+    private void HandleVehicleSelected(string vehicle)
+    {
+        searchRequest.VehicleType = vehicle;
+        StateHasChanged();
+    }
+
+    private void HandleCargoTypeSelected(string cargoType)
+    {
+        searchRequest.CargoType = cargoType;
+        StateHasChanged();
+    }
+
+    private async Task HandleSearch()
+    {
+        if (IsValid)
+        {
+            await OnSearchRequested.InvokeAsync(searchRequest);
+        }
+    }
+} 
