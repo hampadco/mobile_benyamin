@@ -25,8 +25,8 @@
                             </MudStack>
                         </MudItem>
                         <MudItem>
-                            <MudRadioGroup @bind-SelectedOption="selectedCargo">
-                                <MudRadio Option="@cargo.Name" Color="Color.Primary" />
+                            <MudRadioGroup T="string" @bind-SelectedOption="selectedCargo">
+                                <MudRadio Value="cargo.Name" Color="Color.Primary" />
                             </MudRadioGroup>
                         </MudItem>
                     </MudGrid>
@@ -58,9 +58,9 @@
     {
         FullWidth = true,
         CloseButton = false,
-        DisableBackdropClick = true,
+        //DisableBackdropClick = true,
         NoHeader = false,
-        ClassBackground = "bg-b50 dark:bg-n50"
+        //ClassBackground = "bg-b50 dark:bg-n50"
     };
 
     private class CargoType
