@@ -1,6 +1,14 @@
 ﻿@page "/SearchAnnouncement"
 @using mobilebenyamin.Pages.MarketPlace.Components
-
+<MudGrid  Style="color:white;"  Class="d-flex justify-space-between pa-3" >
+    <MudIconButton Style="color:white;"  Icon="@Icons.Material.Filled.ArrowBack" aria-label="delete" />
+    <MudText Style="color:white;" Typo="Typo.h3">جستجوی بار</MudText>
+    <MudIconButton Style="color:white;"  Icon="@Icons.Material.Filled.Close" aria-label="delete"/>
+</MudGrid>
+<MudItem Class="d-flex flex-row justify-space-between">
+    <MudItem>کرج</MudItem>
+    <MudItem>تهران</MudItem>
+</MudItem>
 <MudItem Class="mb-4">
     <AnnouncementCardComponent></AnnouncementCardComponent>
 </MudItem>
