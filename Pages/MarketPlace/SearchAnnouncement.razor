@@ -1,14 +1,45 @@
 ﻿@page "/SearchAnnouncement"
 @using mobilebenyamin.Pages.MarketPlace.Components
 <MudGrid  Style="color:white;"  Class="d-flex justify-space-between pa-3" >
-    <MudIconButton Style="color:white;"  Icon="@Icons.Material.Filled.ArrowBack" aria-label="delete" />
+    <MudIconButton Style="color:white;"  Icon="@Icons.Material.Filled.ArrowBack"/>
     <MudText Style="color:white;" Typo="Typo.h3">جستجوی بار</MudText>
-    <MudIconButton Style="color:white;"  Icon="@Icons.Material.Filled.Close" aria-label="delete"/>
+    <MudIconButton Style="color:white;"  Icon="@Icons.Material.Filled.Close" />
 </MudGrid>
-<MudItem Class="d-flex flex-row justify-space-between">
-    <MudItem>کرج</MudItem>
-    <MudItem>تهران</MudItem>
-</MudItem>
+<MudGrid Class="d-flex flex-grow-1 mb-2">
+    <MudItem Class="flex-grow-0">
+        <MudStack Row="false" Spacing="0">
+            <MudText  Style="font-size:16px;color:white;" Align="Align.Center">از</MudText>
+
+            <MudText Style="font-size:16px;color:white;" Align="Align.Center">تهران</MudText>
+
+        </MudStack>
+
+    </MudItem>
+    <MudItem Class="flex-grow-1">
+        <MudItem Class="d-flex justify-center">
+            <MudImage Fluid="true" Src="/assets/images/plane-white-illus.png"></MudImage>
+        </MudItem>
+    </MudItem>
+    <MudItem Class="flex-grow-0">
+        <MudStack Row="false" Spacing="0">
+            <MudText  Style="font-size:16px;color:white;" Align="Align.Center">به</MudText>
+
+            <MudText Style="font-size: 16px; color: white;" Align="Align.Center">خراسان</MudText>
+        </MudStack>
+    </MudItem>
+</MudGrid>
+<MudGrid Spacing="0" Style="max-width:500px;" Class="pa-1 mb-4 d-flex  flex-nowrap  gap-2 overflow-auto">
+    <CalendarPartComponent Day="22" Month="اسفند" />
+    <CalendarPartComponent Day="23" Month="اسفند" />
+    <CalendarPartComponent Day="24" Month="اسفند" />
+    <CalendarPartComponent Day="25" Month="اسفند" />
+    <CalendarPartComponent Day="26" Month="اسفند" />
+    <CalendarPartComponent Day="27" Month="اسفند" />
+    <CalendarPartComponent Day="28" Month="اسفند" />
+    <CalendarPartComponent Day="29" Month="اسفند" />
+    <CalendarPartComponent Day="30" Month="اسفند" />
+
+</MudGrid>
 <MudItem Class="mb-4">
     <AnnouncementCardComponent></AnnouncementCardComponent>
 </MudItem>

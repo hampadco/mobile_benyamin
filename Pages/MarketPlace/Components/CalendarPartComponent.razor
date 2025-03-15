@@ -1,0 +1,15 @@
+﻿@using System.Security.Cryptography.X509Certificates
+<MudPaper Class="rounded border border-b-2 flex-none" Style="background-color: rgba(255, 255, 255,0.3);border-color:white;" Width="50px" Height="70px">
+    <MudStack Row="false">
+        <MudText Class="pa-0" Style="font-size:16px;color:white;" Align="Align.Center">@Day</MudText>
+
+        <MudText Class="pa-0" Style="font-size:12px;color:white;" Align="Align.Center">@Month</MudText>
+
+    </MudStack>
+</MudPaper>
+@code{
+    [Parameter]
+    public string Day { get; set; }
+    [Parameter]
+    public string Month { get; set; }
+}
